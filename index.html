@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10152f">
+<title>MYCAREER MAP — Your future, your journey</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root{
+--ink:#171b38;--muted:#69708c;--navy:#10152f;--panel:#fff;
+--bg:#f4f5fb;--purple:#7657e8;--pink:#ed6ca8;--cyan:#52c7d9;
+--lime:#b5dc72;--gold:#ffc96b;--line:#e8e9f2;
+--shadow:0 18px 50px rgba(29,32,73,.10);--radius:24px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+a{color:var(--purple)}
+.app{min-height:100vh}
+.topbar{height:76px;padding:0 clamp(18px,5vw,72px);display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.92);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;backdrop-filter:blur(14px)}
+.brand{display:flex;align-items:center;gap:11px;font-family:'Space Grotesk';font-weight:700;letter-spacing:-.7px;font-size:20px}
+.brand-mark{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--purple),var(--pink));display:grid;place-items:center;color:white;font-size:20px;box-shadow:0 8px 18px #7657e844}
+.brand small{display:block;font:600 9px 'DM Sans';letter-spacing:1.5px;color:#8a8da4;margin-top:1px}
+.nav{display:flex;gap:7px;align-items:center}
+.nav button{border:0;background:transparent;color:#737891;font-weight:700;padding:10px 14px;border-radius:12px;font-size:13px;white-space:nowrap}
+.nav button.active,.nav button:hover{background:#f0edff;color:var(--purple)}
+.profile-pill{background:#f4f1ff;border-radius:99px;padding:8px 13px;display:flex;gap:8px;align-items:center;font-size:12px;font-weight:800;color:var(--purple);white-space:nowrap;cursor:pointer}
+main{max-width:1240px;margin:auto;padding:34px clamp(16px,4vw,48px) 80px}
+.screen{display:none;animation:rise .35s ease}
+.screen.active{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--purple)}
+h1,h2,h3,p{margin-top:0}
+h1,h2,h3{font-family:'Space Grotesk';letter-spacing:-1.2px}
+h1{font-size:clamp(38px,6vw,68px);line-height:1.02;margin:14px 0 18px}
+h2{font-size:clamp(28px,4vw,42px);margin:10px 0 12px}
+h3{font-size:20px;margin-bottom:8px}
+.lead{color:var(--muted);font-size:16px;line-height:1.7;max-width:650px}
+.btn{border:0;border-radius:14px;padding:14px 19px;font-weight:800;font-size:13px;display:inline-flex;gap:9px;align-items:center;justify-content:center;transition:.2s}
+.btn:hover{transform:translateY(-2px)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.primary{background:linear-gradient(110deg,var(--purple),#9a69e9);color:white;box-shadow:0 10px 24px #7657e833}
+.secondary{background:white;color:var(--ink);border:1px solid var(--line)}
+.ghost{background:#f0edff;color:var(--purple)}
+.hero{background:var(--navy);color:white;border-radius:32px;padding:clamp(26px,5vw,58px);position:relative;overflow:hidden;min-height:440px;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:24px;box-shadow:var(--shadow)}
+.hero:before{content:"";position:absolute;width:500px;height:500px;border-radius:50%;right:-90px;top:-210px;background:radial-gradient(circle,#7657e855,transparent 68%)}
+.hero:after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;right:50px;bottom:-300px;background:radial-gradient(circle,#ed6ca855,transparent 68%)}
+.hero-copy,.world-art{position:relative;z-index:1}
+.hero h1{color:white}.hero h1 span{color:#c4b5ff}.hero .lead{color:#c5c8dc}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.world-art{height:320px;display:grid;place-items:center}
+.orbit{width:min(100%,330px);aspect-ratio:1;border:1px dashed #ffffff44;border-radius:50%;position:relative;display:grid;place-items:center;animation:spin 65s linear infinite}
+.orbit:before,.orbit:after{content:"";position:absolute;border:1px solid #ffffff20;border-radius:50%}
+.orbit:before{inset:28px}.orbit:after{inset:65px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.planet{width:150px;height:150px;border-radius:45% 55% 50% 50%;background:linear-gradient(145deg,#ffc96b,#ed6ca8 55%,#7657e8);box-shadow:inset -16px -16px 35px #512b9b66,0 0 55px #ed6ca866;display:grid;place-items:center;font-size:65px;animation:counter 65s linear infinite}
+@keyframes counter{to{transform:rotate(-360deg)}}
+.float-icon{position:absolute;width:65px;height:65px;border-radius:20px;display:grid;place-items:center;font-size:30px;background:#ffffff18;border:1px solid #ffffff30;backdrop-filter:blur(8px);box-shadow:0 12px 28px #0003;animation:bob 4s ease-in-out infinite}
+.float-icon:nth-child(2){top:7%;left:17%}.float-icon:nth-child(3){right:0;top:34%;animation-delay:-1s}.float-icon:nth-child(4){bottom:7%;left:23%;animation-delay:-2s}.float-icon:nth-child(5){bottom:17%;right:14%;animation-delay:-3s}
+@keyframes bob{50%{transform:translateY(-12px)}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0 42px}
+.stat{background:white;border:1px solid var(--line);border-radius:18px;padding:18px 20px}
+.stat strong{font:700 24px 'Space Grotesk';display:block}.stat span{color:var(--muted);font-size:12px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:36px 0 18px}
+.section-head p{color:var(--muted);margin:0;font-size:13px}
+.world-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.world-card{border:1px solid var(--line);background:white;border-radius:22px;padding:20px;text-align:left;position:relative;overflow:hidden;min-height:178px;transition:.22s}
+.world-card:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:#c8bafa}
+.world-icon{width:55px;height:55px;border-radius:17px;display:grid;place-items:center;font-size:27px;margin-bottom:17px}
+.world-card h3{font-size:17px}.world-card p{font-size:12px;color:var(--muted);line-height:1.5;margin:0}
+.world-card .arrow{position:absolute;right:19px;top:20px;color:#a2a5b8}
+.purple-bg{background:#f0edff}.pink-bg{background:#fff0f6}.cyan-bg{background:#e9f9fb}.gold-bg{background:#fff7e8}.lime-bg{background:#f3f9e9}.blue-bg{background:#edf3ff}
+.card{background:white;border:1px solid var(--line);border-radius:var(--radius);padding:25px;box-shadow:0 8px 30px #24264c08}
+.split{display:grid;grid-template-columns:1fr .75fr;gap:20px;align-items:start}
+.side-note{background:linear-gradient(145deg,#201b4b,#49368e);border-radius:24px;color:white;padding:26px;position:sticky;top:100px}
+.side-note p{color:#d5d0ed;font-size:13px;line-height:1.65}
+.tag{display:inline-flex;padding:7px 10px;border-radius:99px;background:#f0edff;color:var(--purple);font-size:10px;font-weight:800;letter-spacing:.5px}
+.progress-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-weight:700;margin:22px 0 9px}
+.progress{height:8px;background:#eeeef5;border-radius:20px;overflow:hidden}
+.progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:20px;transition:.3s}
+.question{font:700 22px 'Space Grotesk';line-height:1.35;margin:12px 0 20px}
+.answers{display:grid;gap:10px}
+.answer{width:100%;text-align:left;border:1px solid var(--line);background:white;border-radius:15px;padding:15px 17px;color:var(--ink);font-weight:700;font-size:13px;display:flex;gap:12px;align-items:center;transition:.2s}
+.answer:hover,.answer.selected{border-color:var(--purple);background:#f7f5ff;color:var(--purple)}
+.answer .letter{width:29px;height:29px;border-radius:9px;background:#f1f1f7;display:grid;place-items:center;font-size:11px}
+.quiz-controls{display:flex;justify-content:space-between;gap:8px;margin-top:20px}
+.career-list{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.career-option{border:1px solid var(--line);border-radius:17px;padding:17px;background:white;cursor:pointer;transition:.2s;text-align:left}
+.career-option:hover{border-color:var(--purple);transform:translateY(-2px)}
+.career-option .emoji{font-size:28px}.career-option h3{font-size:15px;margin:10px 0 4px}.career-option p{font-size:11px;color:var(--muted);margin:0;line-height:1.5}
+.match-card{border:1px solid var(--line);border-radius:18px;padding:18px;background:white;margin-bottom:12px}
+.match-top{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.match-score{font:700 20px 'Space Grotesk';color:var(--purple)}
+.match-card p{font-size:12px;line-height:1.6;color:var(--muted);margin:10px 0}
+.match-bar{height:7px;background:#eeeef5;border-radius:20px;overflow:hidden}
+.match-bar i{height:100%;display:block;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:20px}
+.pathway{display:block;position:relative;max-width:760px;margin:30px auto;padding:5px 0 5px 25px}
+.pathway:before{content:"";position:absolute;left:9px;top:24px;bottom:27px;width:3px;border-radius:10px;background:linear-gradient(to bottom,var(--purple),var(--pink),var(--gold))}
+.timeline-item{position:relative;padding:0 0 25px 24px}
+.timeline-item:last-child{padding-bottom:0}
+.timeline-dot{position:absolute;left:-22px;top:22px;width:17px;height:17px;border-radius:50%;background:white;border:4px solid var(--purple);box-shadow:0 0 0 5px #7657e81a;z-index:2}
+.timeline-item:last-child .timeline-dot{border-color:var(--pink);box-shadow:0 0 0 5px #ed6ca81a}
+.path-node{width:100%;display:grid;grid-template-columns:54px 1fr auto;gap:14px;align-items:center;background:white;border:1px solid var(--line);border-radius:17px;padding:17px;box-shadow:0 7px 22px #24264c08}
+.node-icon{width:48px;height:48px;border-radius:15px;background:#f0edff;display:grid;place-items:center;font-size:23px}
+.path-node h3{font-size:15px;margin:0 0 5px}.path-node p{font-size:11px;color:var(--muted);margin:0;line-height:1.6}
+.node-badge{font-size:9px;font-weight:800;color:var(--purple);background:#f1edff;border-radius:99px;padding:7px 9px;white-space:nowrap}
+.route-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.route-tabs button{border:1px solid var(--line);background:white;border-radius:99px;padding:10px 14px;font-size:11px;font-weight:800;color:var(--muted)}
+.route-tabs button.active{background:var(--purple);color:white;border-color:var(--purple)}
+
+/* RECOMMENDATIONS: THREE FULL-WIDTH EXPANDABLE CARDS */
+.recommendation-grid{display:flex;flex-direction:column;gap:14px;margin-top:28px;width:100%}
+.recommendation-card{display:block;width:100%;background:white;border:1px solid var(--line);border-radius:18px;overflow:hidden;min-width:0;box-shadow:0 8px 25px #24264c08}
+.recommendation-card summary{list-style:none;cursor:pointer;padding:19px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:800;font-size:13px;color:var(--ink);min-height:65px}
+.recommendation-card summary::-webkit-details-marker{display:none}
+.recommendation-card summary:after{content:"+";color:var(--purple);font-size:23px;font-weight:500}
+.recommendation-card[open] summary:after{content:"−"}
+.recommendation-card summary:hover{background:#faf9ff}
+.rec-icon{font-size:22px;margin-right:8px}
+.rec-content{padding:0 17px 18px;border-top:1px solid var(--line)}
+.rec-item{padding:13px 0;border-bottom:1px solid var(--line)}
+.rec-item:last-child{border-bottom:0}
+.rec-item strong{display:block;font-size:12px;margin-bottom:5px;line-height:1.5}
+.rec-item p{color:var(--muted);font-size:11px;line-height:1.6;margin:0}
+.rec-item a{display:inline-block;color:var(--purple);font-size:11px;font-weight:800;text-decoration:none;margin-top:7px;margin-right:12px}
+.rec-item a:hover{text-decoration:underline}
+.rec-note{color:var(--muted);font-size:10px;line-height:1.6;margin:12px 0}
+.rec-button{margin-top:9px;padding:8px 11px;font-size:10px;border:0;border-radius:10px;background:#f0edff;color:var(--purple);font-weight:800}
+.rec-subheading{font:700 14px 'Space Grotesk';margin:20px 0 5px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.rec-subheading:first-child{margin-top:16px}
+.rec-badge{display:inline-block;background:#f0edff;color:var(--purple);border-radius:99px;padding:5px 8px;font-size:9px;font-weight:800;margin:3px 5px 3px 0}
+.passport{background:linear-gradient(145deg,#181b3d,#48358c);color:white;border-radius:26px;padding:30px;position:relative;overflow:hidden}
+.passport:after{content:"✦";position:absolute;right:30px;top:10px;font-size:120px;color:#ffffff10;pointer-events:none}
+.passport h2{color:white}.passport p{color:#d6d3eb}
+.passport-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:24px 0}
+.passport-item{background:#ffffff12;border:1px solid #ffffff20;border-radius:14px;padding:14px;min-width:0}
+.passport-item small{color:#c5baf0;display:block;font-size:9px;font-weight:800;letter-spacing:1px;margin-bottom:7px}
+.passport-item strong{font-size:13px;overflow-wrap:anywhere}
+.chips{display:flex;gap:7px;flex-wrap:wrap}.chip{font-size:10px;font-weight:700;background:#ffffff18;padding:7px 10px;border-radius:99px}
+.field{width:100%;border:1px solid var(--line);border-radius:13px;padding:13px 14px;outline:none;margin:7px 0 14px;background:white;color:var(--ink)}
+.field:focus{border-color:var(--purple);box-shadow:0 0 0 3px #7657e81a}
+.label{font-size:11px;font-weight:800;color:#555b77}
+.notice{border-radius:14px;background:#fff7e8;color:#80591d;padding:13px 15px;font-size:11px;line-height:1.6;margin-top:16px}
+.muted{color:var(--muted)}.hidden{display:none!important}
+footer{border-top:1px solid var(--line);padding:24px;text-align:center;color:#9699aa;font-size:11px}
+.toast{position:fixed;bottom:25px;left:50%;transform:translate(-50%,20px);background:#1d2042;color:white;padding:13px 18px;border-radius:13px;font-size:12px;font-weight:700;opacity:0;transition:.25s;z-index:50;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.critical-tag{background:var(--gold)!important;color:#80591d!important;margin-top:8px;font-weight:800}
+
+@media(max-width:800px){
+.topbar{height:auto;min-height:76px;padding:12px 18px;flex-wrap:wrap;gap:10px}
+.nav{display:flex;order:3;flex:1 0 100%;max-width:100%;overflow-x:auto;white-space:nowrap;padding-bottom:3px;scrollbar-width:thin}
+.nav button{flex:0 0 auto}
+.hero{grid-template-columns:1fr}.world-art{height:230px}.orbit{width:220px}
+.planet{width:105px;height:105px;font-size:45px}
+.float-icon{width:48px;height:48px;font-size:23px}
+.world-grid{grid-template-columns:repeat(2,1fr)}
+.split{grid-template-columns:1fr}.side-note{position:static}
+.stats{gap:8px}.stat{padding:13px}.stat strong{font-size:19px}
+}
+@media(max-width:520px){
+main{padding-top:20px}
+.world-grid,.career-list{grid-template-columns:1fr 1fr}
+.world-card{padding:15px;min-height:165px}
+.hero{border-radius:23px}
+.stats{grid-template-columns:1fr}
+.section-head{align-items:start;flex-direction:column}
+.passport-grid{grid-template-columns:1fr}
+.pathway{padding-left:17px}.pathway:before{left:6px}
+.timeline-item{padding-left:19px}.timeline-dot{left:-18px}
+.path-node{grid-template-columns:43px 1fr;padding:13px}
+.node-icon{width:40px;height:40px}
+.node-badge{grid-column:2;justify-self:start}
+.profile-pill{font-size:10px;padding:7px 9px}
+.brand{font-size:17px}.nav button{padding:9px 11px;font-size:12px}
+.quiz-controls .btn{padding:11px 10px;font-size:11px}
+}
+@media print{
+body{background:white!important}
+.topbar,footer,.toast,.section-head,#passport>div:last-child{display:none!important}
+main{padding:0!important;margin:0!important;max-width:none!important}
+.screen{display:none!important;animation:none!important}
+#passport{display:block!important}
+#passport .section-head{display:none!important}
+.passport{background:white!important;color:#171b38!important;border:2px solid #7657e8;padding:25px;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.passport h2,.passport p,.passport-item strong{color:#171b38!important}
+.passport-item{background:#f5f2ff!important;border:1px solid #ddd5ff!important}
+.passport-item small{color:#7657e8!important}
+.chip{background:#eee9ff!important;color:#49368e!important}
+.passport:after{color:#7657e810!important}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+<header class="topbar">
+<div class="brand"><div class="brand-mark">✦</div><div>MYCAREER MAP<small>YOUR FUTURE, YOUR JOURNEY</small></div></div>
+<nav class="nav">
+<button class="active" data-go="home">Explore</button>
+<button data-go="discover">Discover me</button>
+<button data-go="matches">AI matches</button>
+<button data-go="pathway">Pathway</button>
+<button data-go="passport">My Passport</button>
+</nav>
+<div class="profile-pill" onclick="updateExplorerName()">✧ <span id="headerName">FUTURE EXPLORER</span></div>
+</header>
+
+<main>
+<section class="screen active" id="home">
+<div class="hero">
+<div class="hero-copy">
+<div class="eyebrow" style="color:#c4b5ff">A NEW WAY TO FIND YOUR WAY</div>
+<h1>Your future.<br><span>Your own map.</span></h1>
+<p class="lead">Explore careers, discover what makes you tick, and uncover different education routes after SPM — one adventure at a time.</p>
+<div class="hero-actions">
+<button class="btn primary" onclick="go('discover')">Start my adventure <span>→</span></button>
+<button class="btn secondary" onclick="document.getElementById('worldCards').scrollIntoView({behavior:'smooth'})">Explore career worlds</button>
+</div>
+</div>
+<div class="world-art"><div class="orbit"><div class="planet">🧭</div><div class="float-icon">💻</div><div class="float-icon">🧬</div><div class="float-icon">🎨</div><div class="float-icon">⚙️</div></div></div>
+</div>
+<div class="stats">
+<div class="stat"><strong>6 worlds</strong><span>Career areas to explore</span></div>
+<div class="stat"><strong>10 missions</strong><span>Discover your interests</span></div>
+<div class="stat"><strong>Many routes</strong><span>More than one way forward</span></div>
+</div>
+<div class="section-head"><div><div class="eyebrow">PICK A WORLD</div><h2>Where will you explore?</h2></div><p>Tap a world to discover careers inside.</p></div>
+<div class="world-grid" id="worldCards"></div>
+</section>
+
+<section class="screen" id="world">
+<button class="btn ghost" onclick="go('home')">← Back to worlds</button>
+<div class="section-head"><div><div class="eyebrow" id="worldEyebrow">CAREER WORLD</div><h2 id="worldTitle">Technology World</h2><p id="worldDesc"></p></div></div>
+<div class="career-list" id="worldCareers"></div>
+</section>
+
+<section class="screen" id="discover">
+<div class="section-head"><div><div class="eyebrow">MISSION MODE · 01</div><h2>Discover what drives you.</h2><p>Choose what feels most like you. There are no right or wrong answers.</p></div><span class="tag">✦ 10 QUESTIONS</span></div>
+<div class="split">
+<div class="card">
+<div class="progress-row"><span id="qCount">MISSION 1 OF 10</span><span id="qPercent">10%</span></div>
+<div class="progress"><i id="qProgress"></i></div>
+<div class="question" id="questionText"></div>
+<div class="answers" id="answers"></div>
+<div class="quiz-controls">
+<button class="btn secondary" id="prevQ" onclick="prevQuestion()">← Back</button>
+<button class="btn ghost" onclick="resetQuiz()">Reset Quiz</button>
+<button class="btn primary" id="nextQ" onclick="nextQuestion()" disabled>Next mission →</button>
+</div>
+</div>
+<aside class="side-note">
+<div style="font-size:34px">🧩</div><h3 style="color:white;margin-top:18px">Every choice reveals a clue.</h3>
+<p>Your answers help build an interest profile. This is a self-reflection activity, not a clinical or psychometric diagnosis.</p>
+<span class="tag" style="background:#ffffff20;color:white">EXPLORER TIP</span>
+</aside>
+</div>
+</section>
+
+<section class="screen" id="matches">
+<div class="section-head"><div><div class="eyebrow">YOUR DISCOVERY RESULTS</div><h2>Careers worth exploring.</h2><p>Matches are based on your interests and preferences — not a fixed label.</p></div><span class="tag">✦ INTEREST MATCH PREVIEW</span></div>
+<div class="split">
+<div>
+<div class="card" style="margin-bottom:12px"><canvas id="interestChart"></canvas></div>
+<div id="matchResults"></div>
+<button class="btn primary" onclick="go('pathway')">Explore an education route →</button>
+</div>
+<aside class="side-note">
+<div style="font-size:32px">✨</div><h3 style="color:white">Meet your Career Navigator</h3>
+<p>Ask a question about a suggested career. The prototype explains careers using its built-in knowledge.</p>
+<label class="label" style="color:#e2ddfa">ASK YOUR CAREER NAVIGATOR</label>
+<input class="field" id="askInput" placeholder="e.g. Why did I match with UX design?" style="background:#fff;color:#222">
+<button class="btn primary" style="width:100%" onclick="askNavigator()">Ask Navigator ↗</button>
+<div id="aiReply" style="font-size:12px;line-height:1.6;margin-top:15px;color:#e4defb"></div>
+</aside>
+</div>
+<div class="notice"><b>Prototype note:</b> The Navigator and matching engine run locally using built-in rules. They do not connect to a live generative-AI service. Match scores show interest overlap only, not admission chances, aptitude, or future success.</div>
+</section>
+
+<section class="screen" id="pathway">
+<div class="section-head"><div><div class="eyebrow">MISSION MODE · 02</div><h2>Map your way forward.</h2><p>Explore possible routes into a career. Requirements vary by institution and intake.</p></div><span class="tag">✦ PATHWAY ADVENTURE</span></div>
+<div class="card">
+<label class="label" for="careerSelect">CHOOSE A CAREER TO EXPLORE</label>
+<select id="careerSelect" class="field" onchange="renderPathway()"></select>
+<div class="route-tabs" id="routeTabs"></div>
+<div id="pathIntro" class="muted" style="font-size:13px;line-height:1.6"></div>
+<div class="pathway" id="pathNodes"></div>
+
+<div class="section-head" style="margin-top:38px">
+<div><div class="eyebrow">YOUR NEXT STEPS</div><h3>Recommendations for your journey.</h3><p>Every recommendation changes according to the career you select.</p></div>
+</div>
+
+<div class="recommendation-grid">
+<details class="recommendation-card">
+<summary><span><span class="rec-icon">🏛️</span>University Recommended</span></summary>
+<div class="rec-content" id="universityRecommendations"></div>
+</details>
+<details class="recommendation-card">
+<summary><span><span class="rec-icon">💼</span>Career Suggestions</span></summary>
+<div class="rec-content" id="careerRecommendations"></div>
+</details>
+<details class="recommendation-card">
+<summary><span><span class="rec-icon">📚</span>Course Recommendations</span></summary>
+<div class="rec-content" id="courseRecommendations"></div>
+</details>
+</div>
+
+<div style="border-top:1px solid var(--line);margin-top:25px;padding-top:20px;display:flex;justify-content:flex-end">
+<button class="btn primary" onclick="saveAndGoToPassport()">Save to My Passport ✦</button>
+</div>
+<div class="notice">This is a simplified exploration map, not an admission guarantee. Always verify current entry requirements, subject prerequisites, accreditation, fees, credit transfer and programme availability with the institution or official admissions portal.</div>
+</div>
+</section>
+
+<section class="screen" id="passport">
+<div class="section-head"><div><div class="eyebrow">YOUR PROGRESS, YOUR STORY</div><h2>My Future Passport</h2><p>A snapshot of the interests and routes you have explored.</p></div></div>
+<div class="passport" id="passportContent"></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:17px">
+<button class="btn primary" onclick="window.print()">Print / Save as PDF</button>
+<button class="btn secondary" onclick="go('home')">Explore more worlds</button>
+<button class="btn secondary" onclick="resetProgress()">Reset my progress</button>
+</div>
+</section>
+</main>
+
+<footer>MYCAREER MAP · Educational Innovation · Explore Possibilities, Verify every Opportunities.</footer>
+<div class="toast" id="toast"></div>
+</div>
+
+<script>
+const STORAGE_KEY='MYCAREER_MAP_V1';
+
+const worlds=[
+{id:'tech',name:'Technology World',icon:'💻',color:'purple-bg',desc:'Build, code and shape the digital future.',careers:['Software Developer','Data Analyst','Cybersecurity Analyst','UX/UI Designer']},
+{id:'health',name:'Healthcare Kingdom',icon:'🧬',color:'pink-bg',desc:'Use science and care to improve people’s lives.',careers:['Doctor','Nurse','Medical Laboratory Technologist','Physiotherapist']},
+{id:'creative',name:'Creative Island',icon:'🎨',color:'gold-bg',desc:'Turn ideas, stories and imagination into experiences.',careers:['Graphic Designer','Animator','Content Creator','Architect']},
+{id:'engineering',name:'Engineering Zone',icon:'⚙️',color:'cyan-bg',desc:'Design, build and improve how the world works.',careers:['Mechanical Engineer','Civil Engineer','Electrical Engineer','Mechatronics Engineer']},
+{id:'business',name:'Business District',icon:'💼',color:'lime-bg',desc:'Create value, lead teams and solve market problems.',careers:['Entrepreneur','Accountant','Marketing Executive','Human Resource Officer']},
+{id:'education',name:'Knowledge Valley',icon:'📚',color:'blue-bg',desc:'Teach, guide and help others grow.',careers:['Teacher','Counsellor','Instructional Designer','Education Officer']}
+];
+
+const careerData={
+'Software Developer':{world:'Technology',emoji:'👩‍💻',tags:['technology','problem-solving','creative'],why:'You may enjoy turning ideas into working digital tools and solving problems step by step.',skills:['Programming','Logical thinking','Teamwork'],study:['Diploma in Information Technology / Software Development','Relevant degree in Computer Science or Software Engineering','Build a portfolio through projects and internships','Explore junior software development roles'],courses:['Software Development','Computer Science','Software Engineering']},
+'Data Analyst':{world:'Technology',emoji:'📊',tags:['technology','analytical','problem-solving'],why:'You may enjoy finding patterns, interpreting information and using evidence to answer questions.',skills:['Mathematics','Data literacy','Communication'],study:['Diploma in IT, statistics, business analytics or a related field','Relevant degree in Data Science, Statistics, IT or a related discipline','Practise spreadsheets, SQL and data visualisation','Explore entry-level data or reporting roles'],courses:['Data Analytics','Data Science','Statistics']},
+'Cybersecurity Analyst':{world:'Technology',emoji:'🛡️',tags:['technology','analytical','problem-solving'],why:'You may be drawn to investigating problems, protecting systems and thinking carefully about risks.',skills:['Networking','Critical thinking','Cybersecurity fundamentals'],study:['Diploma in IT, networking or cybersecurity (where offered)','Relevant degree in Cybersecurity, Computer Science or IT','Build practical skills in safe, legal learning environments','Explore junior security and IT support pathways'],courses:['Cybersecurity','Information Technology','Computer Science']},
+'UX/UI Designer':{world:'Technology',emoji:'🪄',tags:['creative','technology','people'],why:'You may enjoy combining creativity with empathy to make digital products easier to use.',skills:['Visual design','User research','Prototyping'],study:['Diploma in Multimedia, Interaction Design or a related field','Relevant degree in UX, interaction design, multimedia or related fields','Create a portfolio of interface and user-research projects','Explore junior product or interface design roles'],courses:['UX/UI Design','Interaction Design','Multimedia Design']},
+'Doctor':{world:'Healthcare',emoji:'🩺',tags:['science','people','analytical'],why:'You may be interested in science, careful decision-making and supporting people’s health.',skills:['Biology','Communication','Scientific reasoning'],study:['Complete an accepted pre-university qualification with required subjects','Apply to an accredited medical degree programme','Complete required clinical training and housemanship','Follow current Malaysian Medical Council registration requirements'],courses:['Medicine','Biomedical Science','Medical Science']},
+'Nurse':{world:'Healthcare',emoji:'🩹',tags:['people','science','practical'],why:'You may enjoy practical work that combines health knowledge, teamwork and direct patient care.',skills:['Communication','Biology','Teamwork'],study:['Meet the current entry requirements for an approved nursing programme','Complete an accredited diploma or degree in nursing','Complete clinical placements and required registration','Explore nursing roles and further specialisation'],courses:['Nursing','Healthcare Studies','Medical Science']},
+'Medical Laboratory Technologist':{world:'Healthcare',emoji:'🔬',tags:['science','analytical','practical'],why:'You may enjoy scientific investigation and working carefully with samples, tests and evidence.',skills:['Biology','Chemistry','Attention to detail'],study:['Explore recognised medical laboratory or medical science programmes','Meet the programme-specific science and entry requirements','Complete laboratory and clinical training','Check relevant professional recognition and career requirements'],courses:['Medical Laboratory Technology','Medical Science','Biomedical Science']},
+'Physiotherapist':{world:'Healthcare',emoji:'🏃',tags:['people','science','practical'],why:'You may like combining knowledge of the human body with practical ways to help people move and function.',skills:['Biology','Communication','Problem solving'],study:['Explore recognised physiotherapy programmes and entry requirements','Complete an appropriate diploma or degree route','Undertake supervised clinical placements','Check current registration and practice requirements'],courses:['Physiotherapy','Rehabilitation Science','Sports Science']},
+'Graphic Designer':{world:'Creative',emoji:'🖍️',tags:['creative','technology','practical'],why:'You may enjoy communicating ideas visually and creating designs for real audiences.',skills:['Visual communication','Design software','Creative thinking'],study:['Diploma in Graphic Design, Multimedia or a related field','Relevant degree in Graphic Design or Visual Communication','Build a portfolio with varied design projects','Explore junior design and creative roles'],courses:['Graphic Design','Visual Communication','Multimedia Design']},
+'Animator':{world:'Creative',emoji:'🎬',tags:['creative','technology','practical'],why:'You may enjoy storytelling, visual experimentation and bringing characters or ideas to life.',skills:['Drawing or visual design','Storytelling','Animation tools'],study:['Diploma in Animation, Multimedia or a related field','Relevant degree in Animation, Digital Media or related fields','Build a showreel and project portfolio','Explore animation, motion design and game-art roles'],courses:['Animation','Digital Media','Multimedia']},
+'Content Creator':{world:'Creative',emoji:'🎥',tags:['creative','people','technology'],why:'You may enjoy communicating, storytelling and making digital content for different audiences.',skills:['Communication','Storytelling','Digital media'],study:['Explore programmes in mass communication, broadcasting or digital media','Choose a diploma or degree route based on your goals','Build a responsible portfolio and practise media skills','Explore content, production and communications roles'],courses:['Mass Communication','Digital Media','Broadcasting']},
+'Architect':{world:'Creative',emoji:'🏛️',tags:['creative','analytical','practical'],why:'You may enjoy combining creative design with technical thinking and the needs of people who use spaces.',skills:['Mathematics','Design','Spatial reasoning'],study:['Check recognised architecture-related programmes and current entry requirements','Follow the required accredited academic pathway','Complete relevant practical experience and professional stages','Verify current LAM requirements for professional registration'],courses:['Architecture','Architectural Studies','Built Environment']},
+'Mechanical Engineer':{world:'Engineering',emoji:'⚙️',tags:['engineering','analytical','practical'],why:'You may enjoy understanding how machines work and improving physical systems.',skills:['Mathematics','Physics','Problem solving'],study:['Diploma in Mechanical Engineering or accepted pre-university route','Relevant engineering degree, checking accreditation where required','Gain practical experience through projects and placements','Explore engineering and technical roles'],courses:['Mechanical Engineering','Manufacturing Engineering','Mechatronics']},
+'Civil Engineer':{world:'Engineering',emoji:'🌉',tags:['engineering','analytical','practical'],why:'You may enjoy designing and improving infrastructure that communities rely on.',skills:['Mathematics','Physics','Planning'],study:['Diploma in Civil Engineering or accepted pre-university route','Relevant civil engineering degree, checking accreditation','Gain practical experience and understand safety standards','Explore civil and infrastructure engineering roles'],courses:['Civil Engineering','Construction Management','Structural Engineering']},
+'Electrical Engineer':{world:'Engineering',emoji:'⚡',tags:['engineering','analytical','technology'],why:'You may enjoy understanding electrical systems, circuits and how technology is powered.',skills:['Mathematics','Physics','Analytical thinking'],study:['Diploma in Electrical/Electronic Engineering or accepted pre-university route','Relevant accredited engineering degree','Develop practical project and technical skills','Explore electrical and electronics engineering roles'],courses:['Electrical Engineering','Electronic Engineering','Electrical Technology']},
+'Mechatronics Engineer':{world:'Engineering',emoji:'🤖',tags:['engineering','technology','analytical'],why:'You may enjoy combining mechanics, electronics and programming to create smart systems.',skills:['Mathematics','Programming','Electronics'],study:['Diploma in Mechatronics or a related engineering field','Relevant engineering degree, checking accreditation','Develop integrated hardware/software project experience','Explore automation, robotics and manufacturing roles'],courses:['Mechatronics Engineering','Robotics','Automation Engineering']},
+'Entrepreneur':{world:'Business',emoji:'🚀',tags:['business','creative','people'],why:'You may enjoy spotting opportunities, creating solutions and taking initiative.',skills:['Communication','Financial literacy','Resilience'],study:['Explore business, entrepreneurship or industry-related programmes','Choose a route that supports your business interests','Test ideas through small, responsible projects and mentoring','Build experience in business operations and customer discovery'],courses:['Entrepreneurship','Business Management','Marketing']},
+'Accountant':{world:'Business',emoji:'🧾',tags:['business','analytical','detail'],why:'You may enjoy working with numbers, organising information and making sense of financial records.',skills:['Mathematics','Attention to detail','Ethics'],study:['Diploma in Accounting or accepted pre-university route','Relevant accounting degree or professional pathway','Check current professional-body entry and exemption requirements','Explore accounts, audit and finance roles'],courses:['Accounting','Finance','Business Administration']},
+'Marketing Executive':{world:'Business',emoji:'📣',tags:['business','creative','people'],why:'You may enjoy understanding audiences and communicating ideas in engaging ways.',skills:['Communication','Creativity','Data awareness'],study:['Diploma in Marketing, Business or a related field','Relevant degree in Marketing, Business or Communications','Build campaign and digital marketing experience','Explore marketing and communications roles'],courses:['Marketing','Digital Marketing','Business Management']},
+'Human Resource Officer':{world:'Business',emoji:'🤝',tags:['business','people','detail'],why:'You may enjoy supporting people, organising processes and helping teams work well.',skills:['Communication','Organisation','Empathy'],study:['Diploma in Human Resource Management, Business or a related field','Relevant degree in HR, Management or Business','Develop employment, communication and organisational knowledge','Explore HR and people operations roles'],courses:['Human Resource Management','Business Management','Organisational Psychology']},
+'Teacher':{world:'Education',emoji:'🍎',tags:['people','creative','science'],why:'You may enjoy explaining ideas, encouraging others and helping people learn.',skills:['Communication','Subject knowledge','Patience'],study:['Explore recognised teacher education routes and subject requirements','Check current IPG, university or other approved programme entry criteria','Complete required teaching practice and qualifications','Follow current KPM requirements for teaching roles'],courses:['Education','Teaching','Subject-specific Education']},
+'Counsellor':{world:'Education',emoji:'💬',tags:['people','analytical','communication'],why:'You may be interested in listening, understanding people and supporting their development.',skills:['Listening','Ethics','Communication'],study:['Explore recognised psychology, counselling or related pre-university routes','Complete an appropriate counselling degree programme','Check current professional registration requirements','Explore supervised counselling and related roles'],courses:['Counselling','Psychology','Guidance and Counselling']},
+'Instructional Designer':{world:'Education',emoji:'🧠',tags:['creative','technology','people'],why:'You may enjoy combining learning, design and technology to make education more engaging.',skills:['Learning design','Digital tools','Communication'],study:['Explore education, multimedia, instructional technology or related programmes','Choose a relevant diploma or degree pathway','Create sample learning materials and digital modules','Explore education technology and learning-design roles'],courses:['Instructional Design','Educational Technology','Education']},
+'Education Officer':{world:'Education',emoji:'🏫',tags:['people','analytical','organisation'],why:'You may enjoy improving learning systems, coordinating programmes and supporting education communities.',skills:['Communication','Planning','Analysis'],study:['Explore relevant education, social science or subject-specialist programmes','Check role-specific public service and qualification requirements','Develop project coordination and education policy awareness','Explore education administration and programme roles'],courses:['Education','Educational Management','Public Administration']}
+};
+
+/* RELATED CAREERS: deliberately mapped by profession, not quiz ranking */
+const relatedCareers={
+'Software Developer':['Data Analyst','Cybersecurity Analyst','UX/UI Designer'],
+'Data Analyst':['Software Developer','Accountant','Cybersecurity Analyst'],
+'Cybersecurity Analyst':['Software Developer','Data Analyst','Electrical Engineer'],
+'UX/UI Designer':['Graphic Designer','Software Developer','Content Creator'],
+'Doctor':['Nurse','Physiotherapist','Medical Laboratory Technologist'],
+'Nurse':['Doctor','Physiotherapist','Medical Laboratory Technologist'],
+'Medical Laboratory Technologist':['Doctor','Nurse','Data Analyst'],
+'Physiotherapist':['Nurse','Doctor','Medical Laboratory Technologist'],
+'Graphic Designer':['Animator','UX/UI Designer','Content Creator'],
+'Animator':['Graphic Designer','Content Creator','UX/UI Designer'],
+'Content Creator':['Marketing Executive','Graphic Designer','Animator'],
+'Architect':['Civil Engineer','Graphic Designer','Mechanical Engineer'],
+'Mechanical Engineer':['Mechatronics Engineer','Electrical Engineer','Civil Engineer'],
+'Civil Engineer':['Architect','Mechanical Engineer','Electrical Engineer'],
+'Electrical Engineer':['Mechatronics Engineer','Mechanical Engineer','Cybersecurity Analyst'],
+'Mechatronics Engineer':['Mechanical Engineer','Electrical Engineer','Software Developer'],
+'Entrepreneur':['Marketing Executive','Accountant','Human Resource Officer'],
+'Accountant':['Entrepreneur','Marketing Executive','Human Resource Officer'],
+'Marketing Executive':['Content Creator','Entrepreneur','Graphic Designer'],
+'Human Resource Officer':['Counsellor','Entrepreneur','Education Officer'],
+'Teacher':['Instructional Designer','Counsellor','Education Officer'],
+'Counsellor':['Human Resource Officer','Teacher','Education Officer'],
+'Instructional Designer':['Teacher','Content Creator','UX/UI Designer'],
+'Education Officer':['Teacher','Counsellor','Human Resource Officer']
+};
+
+/* Professional bodies and industry organisations */
+const organisationData={
+'Software Developer':[['Malaysia Digital Economy Corporation (MDEC)','https://mdec.my/','Malaysia’s digital economy agency and industry ecosystem.'],['PIKOM','https://pikom.org.my/','Malaysia’s national technology industry association.'],['IEEE Computer Society','https://www.computer.org/','Professional community for computing and software practitioners.']],
+'Data Analyst':[['Data Management Association (DAMA)','https://dama.org/','Professional community for data management.'],['MDEC','https://mdec.my/','Malaysia’s digital economy ecosystem.'],['Institute of Analytics','https://www.instituteofanalytics.org/','Analytics and data professional community.']],
+'Cybersecurity Analyst':[['CyberSecurity Malaysia','https://www.cybersecurity.my/','Malaysia’s national cybersecurity specialist agency.'],['National Cyber Security Agency (NACSA)','https://www.nacsa.gov.my/','Malaysia’s national cybersecurity coordination agency.'],['ISACA','https://www.isaca.org/','Professional association for IT governance, audit and security.']],
+'UX/UI Designer':[['Malaysia Design Council','https://www.mrm.gov.my/','Malaysia’s design promotion and development organisation.'],['Interaction Design Foundation','https://www.interaction-design.org/','Learning community for UX and interaction design.'],['AIGA','https://www.aiga.org/','Professional association for design.']],
+'Doctor':[['Malaysian Medical Council (MMC)','https://mmc.gov.my/','Medical registration and professional standards in Malaysia.'],['Ministry of Health Malaysia','https://www.moh.gov.my/','Malaysia’s public healthcare system and services.'],['Academy of Medicine of Malaysia','https://www.acadmed.org.my/','Professional medical academy.']],
+'Nurse':[['Nursing Division, Ministry of Health','https://nursing.moh.gov.my/','Official nursing services and information.'],['Malaysian Nursing Board','https://www.moh.gov.my/','Nursing regulation and registration information through MOH.'],['International Council of Nurses','https://www.icn.ch/','International nursing federation.']],
+'Medical Laboratory Technologist':[['Ministry of Health Malaysia','https://www.moh.gov.my/','Public health and laboratory service information.'],['Malaysian Allied Health Professions Council','https://hq.moh.gov.my/alliedhealth/','Allied health profession information and registration.'],['International Federation of Biomedical Laboratory Science','https://www.ifbls.org/','International biomedical laboratory science organisation.']],
+'Physiotherapist':[['Malaysian Physiotherapy Association','https://www.mpa.net.my/','Professional association for physiotherapists in Malaysia.'],['Malaysian Allied Health Professions Council','https://hq.moh.gov.my/alliedhealth/','Allied health profession information and registration.'],['World Physiotherapy','https://world.physio/','International physiotherapy organisation.']],
+'Graphic Designer':[['Malaysia Design Council','https://www.mrm.gov.my/','Malaysia’s design promotion and development organisation.'],['AIGA','https://www.aiga.org/','Professional association for design.'],['The Design Society','https://www.designsociety.org/','International design community.']],
+'Animator':[['Malaysia Digital Economy Corporation (MDEC)','https://mdec.my/','Malaysia’s digital creative and technology ecosystem.'],['Animation World Network','https://www.awn.com/','Animation industry news and professional resources.'],['ASIFA','https://asifa.net/','International animation association.']],
+'Content Creator':[['Malaysian Communications and Multimedia Commission (MCMC)','https://www.mcmc.gov.my/','Communications and multimedia regulator.'],['Content Forum Malaysia','https://contentforum.my/','Industry self-regulatory body for content.'],['MDEC','https://mdec.my/','Malaysia’s digital economy ecosystem.']],
+'Architect':[['Board of Architects Malaysia (LAM)','https://www.lam.gov.my/','Architect registration and professional standards.'],['Pertubuhan Akitek Malaysia (PAM)','https://pam.org.my/','Malaysian professional architectural institute.'],['Royal Institute of British Architects','https://www.architecture.com/','Architecture professional organisation.']],
+'Mechanical Engineer':[['Board of Engineers Malaysia (BEM)','https://bem.org.my/','Engineering registration and professional regulation.'],['The Institution of Engineers Malaysia (IEM)','https://www.myiem.org.my/','Professional engineering institution.'],['Engineering Accreditation Council','https://eac.org.my/','Engineering programme accreditation information.']],
+'Civil Engineer':[['Board of Engineers Malaysia (BEM)','https://bem.org.my/','Engineering registration and professional regulation.'],['The Institution of Engineers Malaysia (IEM)','https://www.myiem.org.my/','Professional engineering institution.'],['Construction Industry Development Board (CIDB)','https://www.cidb.gov.my/','Malaysia’s construction industry development body.']],
+'Electrical Engineer':[['Board of Engineers Malaysia (BEM)','https://bem.org.my/','Engineering registration and professional regulation.'],['The Institution of Engineers Malaysia (IEM)','https://www.myiem.org.my/','Professional engineering institution.'],['Suruhanjaya Tenaga','https://www.st.gov.my/','Malaysia’s energy commission and electrical-sector regulator.']],
+'Mechatronics Engineer':[['Board of Engineers Malaysia (BEM)','https://bem.org.my/','Engineering registration and professional regulation.'],['The Institution of Engineers Malaysia (IEM)','https://www.myiem.org.my/','Professional engineering institution.'],['Malaysia Automation Technology Association','https://mata.org.my/','Automation industry association.']],
+'Entrepreneur':[['SME Corporation Malaysia','https://www.smecorp.gov.my/','Support and development resources for Malaysian SMEs.'],['Malaysia Digital Economy Corporation (MDEC)','https://mdec.my/','Digital entrepreneurship and business ecosystem.'],['Malaysian Global Innovation & Creativity Centre (MaGIC) resources','https://www.mosti.gov.my/','Government innovation and entrepreneurship ecosystem information.']],
+'Accountant':[['Malaysian Institute of Accountants (MIA)','https://mia.org.my/','Malaysia’s accountancy regulatory and professional body.'],['ACCA Malaysia','https://www.accaglobal.com/my/en.html','International accountancy qualification and professional body.'],['Chartered Tax Institute of Malaysia (CTIM)','https://www.ctim.org.my/','Professional tax body in Malaysia.']],
+'Marketing Executive':[['Malaysian Advertisers Association','https://maa.org.my/','Association for advertisers and marketing industry stakeholders.'],['Malaysian Digital Association','https://mda.org.my/','Digital media and advertising industry association.'],['Chartered Institute of Marketing','https://www.cim.co.uk/','Professional marketing body.']],
+'Human Resource Officer':[['Malaysian Employers Federation (MEF)','https://www.mef.org.my/','Employer organisation and workplace resources.'],['Malaysian Institute of Human Resource Management','https://mihrm.com/','Professional HR management organisation.'],['Department of Labour Peninsular Malaysia','https://jtksm.mohr.gov.my/','Employment legislation and labour information.']],
+'Teacher':[['Ministry of Education Malaysia (KPM)','https://www.moe.gov.my/','National education policy and teacher information.'],['Institut Pendidikan Guru Malaysia (IPGM)','https://ipgm.moe.edu.my/','Teacher education institute information.'],['UNESCO Education','https://www.unesco.org/en/education','International education resources.']],
+'Counsellor':[['Lembaga Kaunselor Malaysia','https://www.lkm.gov.my/','Counsellor registration and professional information.'],['Malaysian Board of Counsellors','https://www.lkm.gov.my/','Professional counselling regulation information.'],['Malaysian Psychological Association','https://www.psycho.org.my/','Psychology professional community.']],
+'Instructional Designer':[['Ministry of Education Malaysia','https://www.moe.gov.my/','Education system and digital learning information.'],['Malaysian Digital Association','https://mda.org.my/','Digital industry and learning technology ecosystem.'],['Association for Educational Communications and Technology','https://www.aect.org/','Professional association for educational technology.']],
+'Education Officer':[['Ministry of Education Malaysia','https://www.moe.gov.my/','Education policy, administration and public education information.'],['Public Service Department (JPA)','https://www.jpa.gov.my/','Public service career and service scheme information.'],['UNESCO Education','https://www.unesco.org/en/education','International education policy and resources.']]
+};
+
+/* Malaysian universities. Links point to official university websites/admissions pages.
+   Programme availability must be checked with each institution. */
+const universityDirectory={
+public:[
+{name:'Universiti Malaya (UM)',url:'https://study.um.edu.my/',fields:['Technology','Healthcare','Creative','Engineering','Business','Education']},
+{name:'Universiti Kebangsaan Malaysia (UKM)',url:'https://www.ukm.my/portal/',fields:['Technology','Healthcare','Creative','Engineering','Business','Education']},
+{name:'Universiti Sains Malaysia (USM)',url:'https://admissions.usm.my/',fields:['Technology','Healthcare','Creative','Engineering','Business','Education']},
+{name:'Universiti Putra Malaysia (UPM)',url:'https://upm.edu.my/',fields:['Technology','Healthcare','Creative','Engineering','Business','Education']},
+{name:'Universiti Teknologi Malaysia (UTM)',url:'https://admission.utm.my/',fields:['Technology','Creative','Engineering','Business','Education']},
+{name:'Universiti Teknologi MARA (UiTM)',url:'https://uitm.edu.my/index.php/en/',fields:['Technology','Healthcare','Creative','Engineering','Business','Education']},
+{name:'International Islamic University Malaysia (IIUM)',url:'https://www.iium.edu.my/',fields:['Technology','Healthcare','Engineering','Business','Education']},
+{name:'Universiti Malaysia Sarawak (UNIMAS)',url:'https://www.unimas.my/',fields:['Technology','Healthcare','Creative','Engineering','Business','Education']},
+{name:'Universiti Malaysia Sabah (UMS)',url:'https://www.ums.edu.my/',fields:['Technology','Healthcare','Creative','Engineering','Business','Education']},
+{name:'Universiti Utara Malaysia (UUM)',url:'https://www.uum.edu.my/',fields:['Technology','Business','Education']},
+{name:'Universiti Pendidikan Sultan Idris (UPSI)',url:'https://www.upsi.edu.my/',fields:['Creative','Education','Technology']},
+{name:'Universiti Teknikal Malaysia Melaka (UTeM)',url:'https://www.utem.edu.my/',fields:['Technology','Engineering','Business']}
+],
+private:[
+{name:'Taylor’s University',url:'https://university.taylors.edu.my/',fields:['Technology','Healthcare','Creative','Engineering','Business','Education']},
+{name:'Sunway University',url:'https://sunwayuniversity.edu.my/',fields:['Technology','Healthcare','Creative','Engineering','Business','Education']},
+{name:'UCSI University',url:'https://www.ucsiuniversity.edu.my/',fields:['Technology','Healthcare','Creative','Engineering','Business','Education']},
+{name:'Asia Pacific University (APU)',url:'https://www.apu.edu.my/',fields:['Technology','Creative','Engineering','Business']},
+{name:'Multimedia University (MMU)',url:'https://www.mmu.edu.my/',fields:['Technology','Creative','Engineering','Business']},
+{name:'Universiti Tenaga Nasional (UNITEN)',url:'https://www.uniten.edu.my/',fields:['Technology','Engineering','Business']},
+{name:'INTI International University',url:'https://newinti.edu.my/',fields:['Technology','Healthcare','Creative','Engineering','Business','Education']},
+{name:'SEGi University',url:'https://www.segi.edu.my/',fields:['Technology','Healthcare','Creative','Business','Education']},
+{name:'HELP University',url:'https://university.help.edu.my/',fields:['Business','Education','Healthcare']},
+{name:'Management and Science University (MSU)',url:'https://www.msu.edu.my/',fields:['Technology','Healthcare','Creative','Business','Education']},
+{name:'Universiti Kuala Lumpur (UniKL)',url:'https://www.unikl.edu.my/',fields:['Technology','Healthcare','Engineering','Business']},
+{name:'Infrastructure University Kuala Lumpur (IUKL)',url:'https://iukl.edu.my/',fields:['Engineering','Business','Creative']}
+]
+};
+
+const questions=[
+{q:'A community has a problem. What would you be most excited to do?',a:[['Design a digital tool to help','technology'],['Study the evidence and find patterns','analytical'],['Create a visual campaign','creative'],['Work directly with the people affected','people']]},
+{q:'Which school task feels most satisfying?',a:[['Solving a tricky maths or logic problem','analytical'],['Making a poster, video or presentation','creative'],['Doing a science experiment','science'],['Organising a team project','business']]},
+{q:'Pick a weekend challenge.',a:[['Build a simple website or app','technology'],['Make or repair something','practical'],['Plan a small event or business idea','business'],['Help someone learn a new skill','people']]},
+{q:'Which result would make you proudest?',a:[['A system that works efficiently','engineering'],['A design people remember','creative'],['A person whose life you helped improve','people'],['A discovery supported by evidence','science']]},
+{q:'In a group, which role do you naturally enjoy?',a:[['The idea generator','creative'],['The researcher and fact-checker','analytical'],['The organiser and decision-maker','business'],['The builder who makes it happen','practical']]},
+{q:'Which topic would you explore voluntarily?',a:[['AI, apps and emerging technology','technology'],['The human body and health','science'],['How people think and learn','people'],['How companies and money work','business']]},
+{q:'Choose a tool to master.',a:[['A camera or design software','creative'],['A coding or data tool','technology'],['Lab or scientific equipment','science'],['Machines and engineering tools','engineering']]},
+{q:'What kind of challenge sounds fun?',a:[['Improve a product for its users','people'],['Find why a machine or system failed','engineering'],['Create a new brand or venture','business'],['Explain a complex idea simply','communication']]},
+{q:'Which environment appeals to you most?',a:[['A studio or creative workspace','creative'],['A lab or research setting','science'],['A tech or engineering team','technology'],['A people-focused workplace','people']]},
+{q:'What would you like your future work to involve most?',a:[['Inventing and improving things','engineering'],['Analysing information to guide choices','analytical'],['Communicating and influencing ideas','communication'],['Supporting people and communities','people']]}
+];
+
+const pathwayOptions=[
+{id:'STPM',name:'STPM',title:'STPM route',description:'A national pre-university qualification. Subject combinations and results matter for degree entry.',stages:[['🎓','SPM / Equivalent','Review your SPM results and subject requirements.'],['📚','STPM','Choose suitable Form 6 subjects and complete the STPM qualification.'],['🏛️','Apply for a relevant degree','Check the degree programme’s subject prerequisites, grades and application rules.'],['🧩','Build relevant experience','Develop the skills and practical experience connected to your chosen career.'],['🏁','Explore the career','Compare job roles, professional requirements and further learning options.']]},
+{id:'Matriculation',name:'Matriculation',title:'Matriculation route',description:'A pre-university route. Available streams, subject combinations and progression depend on current programme rules.',stages:[['🎓','SPM / Equivalent','Check current eligibility and application conditions.'],['📘','Matriculation','Complete the relevant stream and required subjects.'],['🏛️','Apply for a relevant degree','Check university selection rules, prerequisites and current entry criteria.'],['🧩','Build relevant experience','Develop projects, communication and career-related skills.'],['🏁','Explore the career','Prepare for internships, further training or entry-level opportunities.']]},
+{id:'Foundation / Asasi',name:'Foundation / Asasi',title:'Foundation / Asasi route',description:'A foundation programme may prepare students for degree study, often with progression conditions set by the institution.',stages:[['🎓','SPM / Equivalent','Review the foundation programme’s subject and grade requirements.'],['📘','Foundation / Asasi','Choose a programme related to your intended field and check its progression rules.'],['🏛️','Progress to a degree','Confirm whether the foundation qualification is accepted by your intended university and degree.'],['🧩','Build relevant experience','Develop practical skills through projects, activities or placements where available.'],['🏁','Explore the career','Check professional requirements and possible job pathways.']]},
+{id:'Diploma',name:'Diploma',title:'Diploma route',description:'A diploma can provide applied learning and may lead to work or further study. Degree entry and credit transfer are not automatic.',stages:[['🎓','SPM / Equivalent','Check the diploma’s subject, grade and other entry requirements.'],['📖','Relevant Diploma','Choose a recognised diploma related to your career interest.'],['🏛️','Work or apply for a degree','Check each university’s admission rules and whether any credit transfer is approved.'],['🧩','Build practical experience','Use projects, industrial training or work experience to strengthen your skills.'],['🏁','Explore the career','Compare job roles and any additional professional requirements.']]},
+{id:'A-Levels',name:'A-Levels',title:'A-Levels route',description:'An international pre-university qualification. University subject prerequisites and recognition should be checked carefully.',stages:[['🎓','SPM / Equivalent','Review the entry conditions for the A-Level provider.'],['🌍','A-Levels','Choose subjects that match the entry requirements of your intended degree.'],['🏛️','Apply for a degree','Check recognition, subject combinations, grades and university admissions rules.'],['🧩','Build relevant experience','Develop practical and academic skills related to your intended field.'],['🏁','Explore the career','Check professional recognition and career requirements in your intended location.']]},
+{id:'TVET / Skills',name:'TVET / Skills',title:'TVET / Skills route',description:'A skills-focused route with practical training. Check the qualification level, awarding body and current recognition.',stages:[['🎓','SPM / Equivalent','Check the entry requirements for the chosen skills programme.'],['🛠️','TVET / Skills qualification','Explore relevant accredited training and skills certification options.'],['🏭','Work or continue skills training','Explore employment, higher skills levels or related further study where eligible.'],['🧩','Build workplace experience','Develop practical competence, safety awareness and professional skills.'],['🏁','Explore the career','Check employer expectations, qualification recognition and any licensing rules.']]}
+];
+
+let qIndex=0,answers=Array(questions.length).fill(null),scores={};
+let selectedCareer='Software Developer',selectedRoute='Diploma';
+let playerName='Future Explorer',lastMatches=[],quizCompleted=false,myChart=null;
+const $=id=>document.getElementById(id);
+
+function escapeHTML(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').classList.remove('show'),2200);}
+
+function saveProgress(){
+try{localStorage.setItem(STORAGE_KEY,JSON.stringify({version:1,playerName,answers,qIndex,selectedCareer,selectedRoute,quizCompleted}));}
+catch(error){console.warn('Progress could not be saved:',error);}
+}
+function loadProgress(){
+try{
+const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;
+const data=JSON.parse(raw);if(!data||data.version!==1)return;
+if(typeof data.playerName==='string')playerName=data.playerName.slice(0,35)||'Future Explorer';
+if(Array.isArray(data.answers)&&data.answers.length===questions.length)answers=data.answers.map((a,i)=>Number.isInteger(a)&&a>=0&&a<questions[i].a.length?a:null);
+if(Number.isInteger(data.qIndex))qIndex=Math.max(0,Math.min(questions.length-1,data.qIndex));
+if(careerData[data.selectedCareer])selectedCareer=data.selectedCareer;
+if(pathwayOptions.some(r=>r.id===data.selectedRoute))selectedRoute=data.selectedRoute;
+quizCompleted=data.quizCompleted===true&&answers.every(a=>a!==null);
+if(quizCompleted)calculateScores();
+}catch(error){console.warn('Saved progress could not be loaded:',error);}
+}
+
+function go(id){
+const target=$(id);if(!target)return;
+document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+target.classList.add('active');
+document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
+window.scrollTo({top:0,behavior:'smooth'});
+if(id==='matches')renderMatches();
+if(id==='pathway')renderPathway();
+if(id==='passport')renderPassport();
+}
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+
+// Single accordion: keep only one recommendation section open at a time.
+document.querySelectorAll('.recommendation-card').forEach(card=>{
+ card.addEventListener('toggle',()=>{
+  if(!card.open)return;
+  document.querySelectorAll('.recommendation-card').forEach(other=>{if(other!==card)other.open=false;});
+ });
+});
+
+function renderWorlds(){
+$('worldCards').innerHTML=worlds.map(w=>`<button class="world-card" onclick="openWorld('${w.id}')"><span class="arrow">↗</span><div class="world-icon ${w.color}">${w.icon}</div><h3>${escapeHTML(w.name)}</h3><p>${escapeHTML(w.desc)}</p></button>`).join('');
+}
+function openWorld(id){
+const world=worlds.find(w=>w.id===id);if(!world)return;
+$('worldEyebrow').textContent='EXPLORE · '+world.name.toUpperCase();
+$('worldTitle').textContent=world.name;$('worldDesc').textContent=world.desc;
+$('worldCareers').innerHTML=world.careers.map(name=>{const d=careerData[name];return `<button class="career-option" onclick="chooseCareer('${escapeHTML(name)}')"><div class="emoji">${d.emoji}</div><h3>${escapeHTML(name)}</h3><p>${escapeHTML(d.why)}</p></button>`;}).join('');
+go('world');
+}
+function chooseCareer(career){
+if(!careerData[career])return;
+selectedCareer=career;$('careerSelect').value=career;saveProgress();go('pathway');
+}
+
+function renderQuestion(){
+const q=questions[qIndex];
+$('qCount').textContent=`MISSION ${qIndex+1} OF ${questions.length}`;
+$('qPercent').textContent=`${Math.round((qIndex+1)/questions.length*100)}%`;
+$('qProgress').style.width=`${(qIndex+1)/questions.length*100}%`;
+$('questionText').textContent=q.q;
+$('answers').innerHTML=q.a.map((a,i)=>`<button class="answer ${answers[qIndex]===i?'selected':''}" onclick="selectAnswer(${i})"><span class="letter">${String.fromCharCode(65+i)}</span>${escapeHTML(a[0])}</button>`).join('');
+$('prevQ').disabled=qIndex===0;
+$('nextQ').disabled=answers[qIndex]===null;
+$('nextQ').textContent=qIndex===questions.length-1?'Reveal my matches ✨':'Next mission →';
+}
+function selectAnswer(index){
+answers[qIndex]=index;quizCompleted=false;scores={};lastMatches=[];saveProgress();renderQuestion();
+}
+function nextQuestion(){
+if(answers[qIndex]===null)return;
+if(qIndex<questions.length-1){qIndex++;saveProgress();renderQuestion();}
+else{calculateScores();quizCompleted=true;saveProgress();toast('Your discovery results are ready!');go('matches');}
+}
+function prevQuestion(){if(qIndex>0){qIndex--;saveProgress();renderQuestion();}}
+function calculateScores(){
+scores={};
+const tags=['technology','analytical','creative','people','science','business','practical','engineering','communication','detail'];
+tags.forEach(t=>scores[t]=0);
+answers.forEach((a,i)=>{if(a===null)return;const tag=questions[i].a[a][1];if(Object.prototype.hasOwnProperty.call(scores,tag))scores[tag]++;});
+return scores;
+}
+function scoreCareer(career){
+const d=careerData[career];if(!d||!quizCompleted)return 0;
+const aliases={'problem-solving':['analytical','engineering','technology'],'organisation':['business','detail'],'detail':['analytical']};
+const total=d.tags.reduce((sum,tag)=>{
+if(scores[tag]!==undefined)return sum+scores[tag];
+return sum+(aliases[tag]||[]).reduce((n,t)=>n+(scores[t]||0),0)/Math.max(1,(aliases[tag]||[]).length);
+},0);
+return Math.min(100,Math.round(total/d.tags.length*(100/(questions.length/2))));
+}
+function rankedCareers(){
+if(!quizCompleted)return[];
+return Object.keys(careerData).map(name=>({name,score:scoreCareer(name),data:careerData[name]})).sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name)).slice(0,5);
+}
+function renderMatches(){
+if(!quizCompleted||answers.some(a=>a===null)){
+lastMatches=[];$('matchResults').innerHTML=`<div class="card"><div style="font-size:32px">🧭</div><h3>Your discovery journey starts here.</h3><p class="muted" style="font-size:13px;line-height:1.6">Complete all 10 missions before viewing your interest-based career matches. Your answers will be saved in this browser.</p><button class="btn primary" onclick="go('discover')">Start the quiz →</button></div>`;
+$('interestChart').parentElement.style.display='none';return;
+}
+$('interestChart').parentElement.style.display='block';
+if(myChart)myChart.destroy();
+myChart=new Chart($('interestChart'),{
+type:'radar',
+data:{labels:Object.keys(scores).map(s=>s[0].toUpperCase()+s.slice(1)),datasets:[{label:'Your Interest Profile',data:Object.values(scores),fill:true,backgroundColor:'rgba(118,87,232,.2)',borderColor:'rgb(118,87,232)',pointBackgroundColor:'rgb(118,87,232)',pointBorderColor:'#fff'}]},
+options:{responsive:true,plugins:{legend:{display:false}},scales:{r:{angleLines:{color:'#e8e9f2'},grid:{color:'#e8e9f2'},pointLabels:{font:{size:11,weight:'800',family:"'DM Sans',sans-serif"},color:'#69708c'},ticks:{backdropColor:'white',stepSize:1},suggestedMin:0}}}
+});
+lastMatches=rankedCareers();
+$('matchResults').innerHTML=lastMatches.map((m,i)=>`
+<div class="match-card">
+<div class="match-top"><div><div class="eyebrow">MATCH #0${i+1} · ${escapeHTML(m.data.world.toUpperCase())}</div><h3 style="margin:5px 0">${m.data.emoji} ${escapeHTML(m.name)}</h3></div><div class="match-score">${m.score}%</div></div>
+<div class="match-bar" style="margin-top:12px"><i style="width:${m.score}%"></i></div>
+<p>${escapeHTML(m.data.why)}</p><div class="chips">${m.data.skills.map(s=>`<span class="tag">${escapeHTML(s)}</span>`).join(' ')}</div>
+<button class="btn ghost" style="margin-top:12px;padding:9px 12px" onclick="chooseCareer('${escapeHTML(m.name)}')">Explore this pathway →</button>
+</div>`).join('');
+}
+
+function askNavigator(){
+const question=$('askInput').value.trim().toLowerCase(),reply=$('aiReply');reply.textContent='';
+if(!question){reply.textContent='Type a question first — for example, “Why did I match with this career?”';return;}
+if(!quizCompleted){reply.textContent='Complete the 10 discovery missions first so the Navigator can use your interest profile.';return;}
+const found=Object.keys(careerData).find(n=>question.includes(n.toLowerCase()))||(lastMatches[0]&&lastMatches[0].name)||selectedCareer;
+const d=careerData[found];let response='';
+if(question.includes('why')||question.includes('match')){
+const top=Object.entries(scores).sort((a,b)=>b[1]-a[1]).slice(0,2).map(x=>x[0]);
+response=`${found} may connect with your interest in ${top.join(' and ')}. ${d.why} Your match is a starting point for exploration, not a prediction of success.`;
+}else if(question.includes('skill'))response=`Useful skills to explore for ${found} include ${d.skills.join(', ')}. Try a small beginner project or activity to see whether you enjoy developing them.`;
+else if(['route','diploma','study','spm','university','course'].some(w=>question.includes(w)))response=`Possible study directions for ${found}: ${d.study.join(' → ')}. Entry requirements and accepted qualifications vary, so check directly with the institution and relevant professional body.`;
+else if(question.includes('salary')||question.includes('pay')||question.includes('income'))response=`Salary for ${found} varies by employer, location, experience, qualifications and industry. This offline prototype does not contain verified live salary data.`;
+else response=`Let's explore ${found}. ${d.why} Skills to start exploring: ${d.skills.join(', ')}. You can open its pathway to compare study routes and recommendations.`;
+reply.textContent=response;
+}
+
+/* PATHWAY AND CAREER-SPECIFIC RECOMMENDATIONS */
+function initPathways(){
+$('careerSelect').innerHTML=Object.keys(careerData).sort().map(n=>`<option value="${escapeHTML(n)}">${escapeHTML(n)}</option>`).join('');
+$('careerSelect').value=selectedCareer;
+}
+
+/* Career-specific Malaysian institution shortlist.
+   These are relevant institutions to investigate, not a claim that every campus/intake
+   currently offers an identically named programme. Always verify the exact programme. */
+const universitiesByCareer={
+'Software Developer':['Universiti Teknologi Malaysia (UTM)','Universiti Malaya (UM)','Universiti Teknologi MARA (UiTM)','Universiti Teknikal Malaysia Melaka (UTeM)','Asia Pacific University (APU)','Multimedia University (MMU)','Universiti Tunku Abdul Rahman (UTAR)','Monash University Malaysia'],
+'Data Analyst':['Universiti Malaya (UM)','Universiti Kebangsaan Malaysia (UKM)','Universiti Sains Malaysia (USM)','Universiti Teknologi Malaysia (UTM)','Universiti Teknologi MARA (UiTM)','Asia Pacific University (APU)','Monash University Malaysia','Sunway University','Universiti Tunku Abdul Rahman (UTAR)'],
+'Cybersecurity Analyst':['Universiti Teknologi Malaysia (UTM)','Universiti Teknologi MARA (UiTM)','Universiti Teknikal Malaysia Melaka (UTeM)','Universiti Kuala Lumpur (UniKL)','Asia Pacific University (APU)','Multimedia University (MMU)','MILA University','Universiti Tunku Abdul Rahman (UTAR)'],
+'UX/UI Designer':['Universiti Teknologi MARA (UiTM)','Multimedia University (MMU)','Universiti Malaysia Sarawak (UNIMAS)','Universiti Sains Malaysia (USM)','Asia Pacific University (APU)','Taylor’s University','The One Academy (TOA)','Universiti Tunku Abdul Rahman (UTAR)'],
+'Doctor':['Universiti Malaya (UM)','Universiti Kebangsaan Malaysia (UKM)','Universiti Sains Malaysia (USM)','Universiti Putra Malaysia (UPM)','Universiti Teknologi MARA (UiTM)','International Islamic University Malaysia (IIUM)','International Medical University (IMU)','Monash University Malaysia','Newcastle University Medicine Malaysia','Management and Science University (MSU)'],
+'Nurse':['Universiti Malaya (UM)','Universiti Kebangsaan Malaysia (UKM)','Universiti Sains Malaysia (USM)','Universiti Teknologi MARA (UiTM)','International Islamic University Malaysia (IIUM)','Management and Science University (MSU)','International Medical University (IMU)','MAHSA University','SEGi University','KPJ Healthcare University'],
+'Medical Laboratory Technologist':['Universiti Kebangsaan Malaysia (UKM)','Universiti Sains Malaysia (USM)','Universiti Putra Malaysia (UPM)','Universiti Teknologi MARA (UiTM)','Universiti Malaya (UM)','International Medical University (IMU)','MAHSA University','Management and Science University (MSU)','SEGi University'],
+'Physiotherapist':['Universiti Kebangsaan Malaysia (UKM)','Universiti Sains Malaysia (USM)','Universiti Teknologi MARA (UiTM)','Universiti Malaya (UM)','International Islamic University Malaysia (IIUM)','Universiti Tunku Abdul Rahman (UTAR)','MAHSA University','SEGi University','KPJ Healthcare University'],
+'Graphic Designer':['Universiti Teknologi MARA (UiTM)','Universiti Sains Malaysia (USM)','Universiti Malaysia Sarawak (UNIMAS)','Multimedia University (MMU)','Universiti Pendidikan Sultan Idris (UPSI)','The One Academy (TOA)','Taylor’s University','SEGi University','Universiti Tunku Abdul Rahman (UTAR)'],
+'Animator':['Multimedia University (MMU)','Universiti Teknologi MARA (UiTM)','Universiti Malaysia Sarawak (UNIMAS)','Universiti Sains Malaysia (USM)','Asia Pacific University (APU)','The One Academy (TOA)','Taylor’s University','SEGi University','Universiti Tunku Abdul Rahman (UTAR)'],
+'Content Creator':['Universiti Teknologi MARA (UiTM)','Universiti Malaya (UM)','Universiti Sains Malaysia (USM)','Universiti Kebangsaan Malaysia (UKM)','Multimedia University (MMU)','Taylor’s University','Sunway University','SEGi University','Universiti Tunku Abdul Rahman (UTAR)'],
+'Architect':['Universiti Teknologi Malaysia (UTM)','Universiti Teknologi MARA (UiTM)','Universiti Malaya (UM)','Universiti Sains Malaysia (USM)','Universiti Putra Malaysia (UPM)','Taylor’s University','UCSI University','Infrastructure University Kuala Lumpur (IUKL)','Universiti Tunku Abdul Rahman (UTAR)'],
+'Mechanical Engineer':['Universiti Teknologi Malaysia (UTM)','Universiti Teknologi MARA (UiTM)','Universiti Sains Malaysia (USM)','Universiti Teknikal Malaysia Melaka (UTeM)','Universiti Kuala Lumpur (UniKL)','Heriot-Watt University Malaysia','Universiti Tenaga Nasional (UNITEN)','Universiti Tunku Abdul Rahman (UTAR)','MILA University'],
+'Civil Engineer':['Universiti Teknologi Malaysia (UTM)','Universiti Teknologi MARA (UiTM)','Universiti Sains Malaysia (USM)','Universiti Malaya (UM)','Universiti Tun Hussein Onn Malaysia (UTHM)','Universiti Teknologi PETRONAS (UTP)','Infrastructure University Kuala Lumpur (IUKL)','Universiti Tunku Abdul Rahman (UTAR)','Heriot-Watt University Malaysia'],
+'Electrical Engineer':['Universiti Teknologi Malaysia (UTM)','Universiti Teknologi MARA (UiTM)','Universiti Sains Malaysia (USM)','Universiti Teknikal Malaysia Melaka (UTeM)','Universiti Tenaga Nasional (UNITEN)','Universiti Teknologi PETRONAS (UTP)','Multimedia University (MMU)','Universiti Tunku Abdul Rahman (UTAR)','Heriot-Watt University Malaysia'],
+'Mechatronics Engineer':['Universiti Teknikal Malaysia Melaka (UTeM)','Universiti Teknologi Malaysia (UTM)','Universiti Tun Hussein Onn Malaysia (UTHM)','Universiti Kuala Lumpur (UniKL)','Universiti Teknologi MARA (UiTM)','Universiti Teknologi PETRONAS (UTP)','Universiti Tunku Abdul Rahman (UTAR)','MILA University','Multimedia University (MMU)'],
+'Entrepreneur':['Universiti Utara Malaysia (UUM)','Universiti Teknologi MARA (UiTM)','Universiti Malaya (UM)','Universiti Kebangsaan Malaysia (UKM)','Taylor’s University','Sunway University','Asia Pacific University (APU)','Universiti Tunku Abdul Rahman (UTAR)','Management and Science University (MSU)'],
+'Accountant':['Universiti Utara Malaysia (UUM)','Universiti Teknologi MARA (UiTM)','Universiti Malaya (UM)','Universiti Kebangsaan Malaysia (UKM)','Universiti Putra Malaysia (UPM)','Sunway University','Taylor’s University','HELP University','Universiti Tunku Abdul Rahman (UTAR)','Multimedia University (MMU)'],
+'Marketing Executive':['Universiti Utara Malaysia (UUM)','Universiti Teknologi MARA (UiTM)','Universiti Malaya (UM)','Universiti Putra Malaysia (UPM)','Taylor’s University','Sunway University','Asia Pacific University (APU)','SEGi University','Universiti Tunku Abdul Rahman (UTAR)','Management and Science University (MSU)'],
+'Human Resource Officer':['Universiti Utara Malaysia (UUM)','Universiti Teknologi MARA (UiTM)','Universiti Malaya (UM)','Universiti Kebangsaan Malaysia (UKM)','HELP University','Asia Pacific University (APU)','Sunway University','Universiti Tunku Abdul Rahman (UTAR)','Management and Science University (MSU)'],
+'Teacher':['Universiti Pendidikan Sultan Idris (UPSI)','Universiti Malaya (UM)','Universiti Kebangsaan Malaysia (UKM)','Universiti Teknologi MARA (UiTM)','International Islamic University Malaysia (IIUM)','Universiti Selangor (UNISEL)','UNITAR International University','Taylor’s University','SEGi University','Management and Science University (MSU)','Universiti Tunku Abdul Rahman (UTAR)'],
+'Counsellor':['Universiti Pendidikan Sultan Idris (UPSI)','Universiti Malaya (UM)','Universiti Kebangsaan Malaysia (UKM)','Universiti Putra Malaysia (UPM)','Universiti Sains Malaysia (USM)','HELP University','Universiti Tunku Abdul Rahman (UTAR)','Management and Science University (MSU)','UCSI University'],
+'Instructional Designer':['Universiti Pendidikan Sultan Idris (UPSI)','Universiti Malaya (UM)','Universiti Teknologi MARA (UiTM)','Universiti Sains Malaysia (USM)','Multimedia University (MMU)','Asia Pacific University (APU)','Universiti Selangor (UNISEL)','Management and Science University (MSU)','Universiti Tunku Abdul Rahman (UTAR)'],
+'Education Officer':['Universiti Pendidikan Sultan Idris (UPSI)','Universiti Malaya (UM)','Universiti Kebangsaan Malaysia (UKM)','Universiti Utara Malaysia (UUM)','Universiti Teknologi MARA (UiTM)','Universiti Selangor (UNISEL)','UNITAR International University','Taylor’s University','Management and Science University (MSU)','Universiti Tunku Abdul Rahman (UTAR)']
+};
+const universityNames={
+'Universiti Malaya (UM)':['https://www.um.edu.my/','public'],'Universiti Kebangsaan Malaysia (UKM)':['https://www.ukm.my/portal/','public'],'Universiti Sains Malaysia (USM)':['https://www.usm.my/','public'],'Universiti Putra Malaysia (UPM)':['https://upm.edu.my/','public'],'Universiti Teknologi Malaysia (UTM)':['https://www.utm.my/','public'],'Universiti Teknologi MARA (UiTM)':['https://uitm.edu.my/','public'],'International Islamic University Malaysia (IIUM)':['https://www.iium.edu.my/','public'],'Universiti Malaysia Sarawak (UNIMAS)':['https://www.unimas.my/','public'],'Universiti Utara Malaysia (UUM)':['https://www.uum.edu.my/','public'],'Universiti Pendidikan Sultan Idris (UPSI)':['https://www.upsi.edu.my/','public'],'Universiti Teknikal Malaysia Melaka (UTeM)':['https://www.utem.edu.my/','public'],'Universiti Tun Hussein Onn Malaysia (UTHM)':['https://www.uthm.edu.my/','public'],'Universiti Tenaga Nasional (UNITEN)':['https://www.uniten.edu.my/','private'],'Universiti Kuala Lumpur (UniKL)':['https://www.unikl.edu.my/','private'],'Multimedia University (MMU)':['https://www.mmu.edu.my/','private'],'Asia Pacific University (APU)':['https://www.apu.edu.my/','private'],'Taylor’s University':['https://university.taylors.edu.my/','private'],'Sunway University':['https://sunwayuniversity.edu.my/','private'],'HELP University':['https://university.help.edu.my/','private'],'UNITAR International University':['https://www.unitar.my/','private'],'SEGi University':['https://university.segi.edu.my/','private'],'Management and Science University (MSU)':['https://www.msu.edu.my/','private'],'Universiti Tunku Abdul Rahman (UTAR)':['https://www.utar.edu.my/','private'],'Monash University Malaysia':['https://www.monash.edu.my/','private'],'MILA University':['https://mila.edu.my/','private'],'International Medical University (IMU)':['https://www.imu.edu.my/','private'],'MAHSA University':['https://mahsa.edu.my/','private'],'KPJ Healthcare University':['https://www.kpjuc.edu.my/','private'],'Newcastle University Medicine Malaysia':['https://www.numm.edu.my/','private'],'The One Academy (TOA)':['https://www.toa.edu.my/','private'],'UCSI University':['https://www.ucsiuniversity.edu.my/','private'],'Infrastructure University Kuala Lumpur (IUKL)':['https://www.iukl.edu.my/','private'],'Heriot-Watt University Malaysia':['https://www.hw.ac.uk/malaysia/','private'],'Universiti Teknologi PETRONAS (UTP)':['https://www.utp.edu.my/','private'],'Universiti Selangor (UNISEL)':['https://unisel.my/','private']
+};
+function renderUniversityRecommendations(data){
+ const names=universitiesByCareer[selectedCareer]||[];
+ const groups={public:[],private:[]};
+ names.forEach(name=>{const info=universityNames[name];if(info)groups[info[1]].push({name,url:info[0]});});
+ const list=items=>items.length?items.map(u=>`<div class="rec-item"><strong>${escapeHTML(u.name)}</strong><p>An institution to explore for ${escapeHTML(selectedCareer)}-related studies. Check the exact programme title, campus, entry requirements and current intake on its official website.</p><a href="${u.url}" target="_blank" rel="noopener noreferrer">Official university website ↗</a></div>`).join(''):'<p class="rec-note">No institutions are currently listed in this shortlist for this category. Please check the MQR and relevant university websites for additional options.</p>';
+ $('universityRecommendations').innerHTML=`<p class="rec-note">This shortlist is tailored to the selected career and highlights institutions worth exploring. It does not guarantee that every institution currently offers an identically named programme. Always confirm programme availability directly with the institution.</p><h4 class="rec-subheading">🏛️ Public Universities (Universiti Awam)</h4>${list(groups.public)}<h4 class="rec-subheading">🏢 Private Universities and Institutions (Universiti Swasta / IPTS)</h4>${list(groups.private)}<div class="rec-item"><strong>Programme and accreditation checks</strong><p>Confirm the specific programme through the university’s official website and the Malaysian Qualifications Register (MQR). UPU is a general admissions resource for participating public institutions.</p><a href="https://www2.mqa.gov.my/mqr/" target="_blank" rel="noopener noreferrer">Check MQA / MQR ↗</a><a href="https://upu.mohe.gov.my/" target="_blank" rel="noopener noreferrer">UPU admission portal ↗</a></div>`;
+}
+
+/* Every career suggestion is restricted to the selected career's related-career map. */
+function renderCareerRecommendations(data){
+const suggestions=relatedCareers[selectedCareer]||[];
+const relatedWorld=data.world;
+$('careerRecommendations').innerHTML=`
+<p class="rec-note">These are related roles in the same profession, industry or a closely connected field. They are not random quiz matches.</p>
+${suggestions.map(name=>{
+const d=careerData[name];
+return `<div class="rec-item">
+<strong>${d.emoji} ${escapeHTML(name)}</strong>
+<p>${escapeHTML(d.why)}</p>
+<span class="rec-badge">${escapeHTML(d.world)}</span>
+<button class="rec-button" onclick="chooseCareer('${escapeHTML(name)}')">Explore this career pathway →</button>
+</div>`;
+}).join('')}
+<h4 class="rec-subheading">Professional organisations & industry links</h4>
+<p class="rec-note">Useful organisations for learning about professional standards, industry information and career development.</p>
+${(organisationData[selectedCareer]||[]).map(org=>`
+<div class="rec-item">
+<strong>${escapeHTML(org[0])}</strong>
+<p>${escapeHTML(org[2])}</p>
+<a href="${org[1]}" target="_blank" rel="noopener noreferrer">Visit organisation website ↗</a>
+</div>`).join('')}`;
+}
+
+/* Qualification-level course lists, selected according to the chosen career */
+const courseCatalog={
+'Software Developer':{
+diploma:['Diploma in Information Technology','Diploma in Software Engineering','Diploma in Computer Science','Diploma in Mobile Application Development'],
+bachelor:['Bachelor of Computer Science','Bachelor of Software Engineering','Bachelor of Information Technology','Bachelor of Information Systems','Bachelor of Cybersecurity','Bachelor of Data Science','Bachelor of Artificial Intelligence','Bachelor of Cloud Computing','Bachelor of Computer Networks','Bachelor of Mobile Computing','Bachelor of Game Development','Bachelor of Multimedia Computing','Bachelor of Business Information Systems','Bachelor of Internet of Things (IoT)','Bachelor of Blockchain Technology','Bachelor of Robotics & Automation','Bachelor of Software Engineering (AI)','Bachelor of Information Security','Bachelor of Computing (Honours)'],
+master:['Master of Computer Science','Master of Software Engineering','Master of Information Technology','Master of Artificial Intelligence','Master of Data Science','Master of Cybersecurity'],
+phd:['PhD in Computer Science','PhD in Software Engineering','PhD in Artificial Intelligence','PhD in Information Technology']},
+'Data Analyst':{
+diploma:['Diploma in Information Technology','Diploma in Statistics','Diploma in Business Information Systems','Diploma in Data Analytics'],
+bachelor:['Bachelor of Data Science','Bachelor of Data Analytics','Bachelor of Statistics','Bachelor of Computer Science','Bachelor of Business Analytics','Bachelor of Information Systems','Bachelor of Applied Mathematics'],
+master:['Master of Data Science','Master of Business Analytics','Master of Applied Statistics','Master of Artificial Intelligence'],
+phd:['PhD in Data Science','PhD in Statistics','PhD in Information Systems','PhD in Business Analytics']},
+'Cybersecurity Analyst':{
+diploma:['Diploma in Cybersecurity','Diploma in Information Technology','Diploma in Computer Networks','Diploma in Information Security'],
+bachelor:['Bachelor of Cybersecurity','Bachelor of Information Security','Bachelor of Computer Science (Computer Security)','Bachelor of Information Technology','Bachelor of Computer Networks','Bachelor of Digital Forensics'],
+master:['Master of Cybersecurity','Master of Information Security','Master of Digital Forensics','Master of Computer Science'],
+phd:['PhD in Cybersecurity','PhD in Information Security','PhD in Computer Science']},
+'UX/UI Designer':{
+diploma:['Diploma in Multimedia Design','Diploma in Graphic Design','Diploma in Interactive Media','Diploma in Digital Media'],
+bachelor:['Bachelor of User Experience Design','Bachelor of Interaction Design','Bachelor of Multimedia Computing','Bachelor of Digital Media','Bachelor of Graphic Design','Bachelor of Creative Multimedia','Bachelor of Human-Computer Interaction'],
+master:['Master of Design','Master of Digital Media','Master of Human-Computer Interaction','Master of Creative Multimedia'],
+phd:['PhD in Design','PhD in Human-Computer Interaction','PhD in Digital Media']},
+'Doctor':{
+diploma:['Diploma in Science (as a possible preparatory route only; not a medical qualification)'],
+bachelor:['Bachelor of Medicine and Bachelor of Surgery (MBBS)','Doctor of Medicine (MD)'],
+master:['Master of Medical Science','Master of Public Health','Master of Clinical Medicine','Master in a recognised medical specialty'],
+phd:['PhD in Medical Sciences','PhD in Biomedical Sciences','PhD in Public Health']},
+'Nurse':{
+diploma:['Diploma in Nursing'],
+bachelor:['Bachelor of Nursing','Bachelor of Nursing Science','Bachelor of Nursing (Hons)'],
+master:['Master of Nursing','Master of Nursing Science','Master of Public Health'],
+phd:['PhD in Nursing','PhD in Nursing Science','PhD in Health Sciences']},
+'Medical Laboratory Technologist':{
+diploma:['Diploma in Medical Laboratory Technology','Diploma in Medical Laboratory Science'],
+bachelor:['Bachelor of Medical Laboratory Technology','Bachelor of Biomedical Science','Bachelor of Medical Science','Bachelor of Laboratory Medicine'],
+master:['Master of Biomedical Science','Master of Medical Science','Master of Laboratory Medicine'],
+phd:['PhD in Biomedical Science','PhD in Medical Laboratory Science','PhD in Medical Sciences']},
+'Physiotherapist':{
+diploma:['Diploma in Physiotherapy'],
+bachelor:['Bachelor of Physiotherapy','Bachelor of Physiotherapy (Hons)','Bachelor of Rehabilitation Science'],
+master:['Master of Physiotherapy','Master of Rehabilitation Science','Master of Sports Medicine'],
+phd:['PhD in Physiotherapy','PhD in Rehabilitation Sciences','PhD in Health Sciences']},
+'Graphic Designer':{
+diploma:['Diploma in Graphic Design','Diploma in Visual Communication','Diploma in Creative Multimedia','Diploma in Digital Design'],
+bachelor:['Bachelor of Graphic Design','Bachelor of Visual Communication','Bachelor of Creative Multimedia','Bachelor of Digital Media','Bachelor of Communication Design'],
+master:['Master of Design','Master of Visual Communication','Master of Creative Multimedia'],
+phd:['PhD in Design','PhD in Visual Communication','PhD in Creative Arts']},
+'Animator':{
+diploma:['Diploma in Animation','Diploma in 3D Animation','Diploma in Creative Multimedia','Diploma in Digital Media'],
+bachelor:['Bachelor of Animation','Bachelor of 3D Animation','Bachelor of Digital Media','Bachelor of Creative Multimedia','Bachelor of Game Art and Design'],
+master:['Master of Animation','Master of Digital Media','Master of Creative Multimedia'],
+phd:['PhD in Animation','PhD in Digital Media','PhD in Creative Arts']},
+'Content Creator':{
+diploma:['Diploma in Mass Communication','Diploma in Broadcasting','Diploma in Digital Media','Diploma in Film and Television'],
+bachelor:['Bachelor of Mass Communication','Bachelor of Media Studies','Bachelor of Broadcasting','Bachelor of Digital Media','Bachelor of Journalism','Bachelor of Film and Television'],
+master:['Master of Communication','Master of Media Studies','Master of Digital Media','Master of Journalism'],
+phd:['PhD in Communication','PhD in Media Studies','PhD in Journalism']},
+'Architect':{
+diploma:['Diploma in Architectural Technology','Diploma in Building Technology','Diploma in Interior Architecture'],
+bachelor:['Bachelor of Science in Architecture','Bachelor of Architectural Studies','Bachelor of Architecture','Bachelor of Interior Architecture'],
+master:['Master of Architecture','Master of Sustainable Architecture','Master of Urban Design'],
+phd:['PhD in Architecture','PhD in Built Environment','PhD in Urban Design']},
+'Mechanical Engineer':{
+diploma:['Diploma in Mechanical Engineering','Diploma in Manufacturing Engineering','Diploma in Mechanical Design'],
+bachelor:['Bachelor of Mechanical Engineering','Bachelor of Mechanical Engineering (Hons)','Bachelor of Manufacturing Engineering','Bachelor of Automotive Engineering','Bachelor of Materials Engineering'],
+master:['Master of Mechanical Engineering','Master of Manufacturing Engineering','Master of Automotive Engineering'],
+phd:['PhD in Mechanical Engineering','PhD in Manufacturing Engineering','PhD in Materials Engineering']},
+'Civil Engineer':{
+diploma:['Diploma in Civil Engineering','Diploma in Construction Technology','Diploma in Building Services'],
+bachelor:['Bachelor of Civil Engineering','Bachelor of Structural Engineering','Bachelor of Construction Management','Bachelor of Geotechnical Engineering','Bachelor of Environmental Engineering'],
+master:['Master of Civil Engineering','Master of Structural Engineering','Master of Construction Management','Master of Geotechnical Engineering'],
+phd:['PhD in Civil Engineering','PhD in Structural Engineering','PhD in Construction']},
+'Electrical Engineer':{
+diploma:['Diploma in Electrical Engineering','Diploma in Electronic Engineering','Diploma in Electrical and Electronic Engineering'],
+bachelor:['Bachelor of Electrical Engineering','Bachelor of Electronic Engineering','Bachelor of Electrical and Electronic Engineering','Bachelor of Power Engineering','Bachelor of Telecommunications Engineering'],
+master:['Master of Electrical Engineering','Master of Electronic Engineering','Master of Power Systems Engineering'],
+phd:['PhD in Electrical Engineering','PhD in Electronic Engineering','PhD in Power Systems']},
+'Mechatronics Engineer':{
+diploma:['Diploma in Mechatronics Engineering','Diploma in Robotics','Diploma in Electronic Engineering'],
+bachelor:['Bachelor of Mechatronics Engineering','Bachelor of Robotics Engineering','Bachelor of Automation Engineering','Bachelor of Mechanical Engineering','Bachelor of Electrical and Electronic Engineering'],
+master:['Master of Mechatronics Engineering','Master of Robotics','Master of Automation Engineering'],
+phd:['PhD in Mechatronics Engineering','PhD in Robotics','PhD in Automation']},
+'Entrepreneur':{
+diploma:['Diploma in Entrepreneurship','Diploma in Business Management','Diploma in Business Studies','Diploma in Marketing'],
+bachelor:['Bachelor of Entrepreneurship','Bachelor of Business Administration','Bachelor of Business Management','Bachelor of Innovation and Technology Management','Bachelor of International Business'],
+master:['Master of Business Administration (MBA)','Master of Entrepreneurship','Master of Business Management','Master of Innovation Management'],
+phd:['PhD in Entrepreneurship','PhD in Business Management','PhD in Innovation Management']},
+'Accountant':{
+diploma:['Diploma in Accountancy','Diploma in Accounting','Diploma in Finance','Diploma in Business Studies (Accounting)'],
+bachelor:['Bachelor of Accounting','Bachelor of Accountancy (Hons)','Bachelor of Accounting and Finance','Bachelor of Professional Accounting','Bachelor of Finance','Bachelor of Business Administration (Accounting)'],
+master:['Master of Accounting','Master of Professional Accountancy','Master of Finance','Master of Taxation','Master of Business Administration (Accounting)'],
+phd:['PhD in Accounting','PhD in Finance','PhD in Business and Management']},
+'Marketing Executive':{
+diploma:['Diploma in Marketing','Diploma in Digital Marketing','Diploma in Business Studies','Diploma in Mass Communication'],
+bachelor:['Bachelor of Marketing','Bachelor of Digital Marketing','Bachelor of Business Administration (Marketing)','Bachelor of Marketing Communications','Bachelor of Advertising','Bachelor of Communication'],
+master:['Master of Marketing','Master of Digital Marketing','Master of Business Administration (Marketing)','Master of Strategic Communication'],
+phd:['PhD in Marketing','PhD in Consumer Behaviour','PhD in Business Management']},
+'Human Resource Officer':{
+diploma:['Diploma in Human Resource Management','Diploma in Business Management','Diploma in Office Management'],
+bachelor:['Bachelor of Human Resource Management','Bachelor of Human Resource Development','Bachelor of Business Administration (Human Resource)','Bachelor of Industrial Relations','Bachelor of Management'],
+master:['Master of Human Resource Management','Master of Human Resource Development','Master of Industrial Relations','Master of Business Administration'],
+phd:['PhD in Human Resource Management','PhD in Human Resource Development','PhD in Management']},
+'Teacher':{
+diploma:['Diploma in Early Childhood Education','Diploma in Teaching (where recognised)','Diploma in Islamic Studies or subject-specific studies'],
+bachelor:['Bachelor of Education','Bachelor of Teaching','Bachelor of Education (TESL)','Bachelor of Education (Mathematics)','Bachelor of Education (Science)','Bachelor of Education (Special Education)','Bachelor of Education (Early Childhood)'],
+master:['Master of Education','Master of Teaching and Learning','Master of Educational Psychology','Master of Curriculum and Instruction'],
+phd:['PhD in Education','PhD in Curriculum and Instruction','PhD in Educational Psychology']},
+'Counsellor':{
+diploma:['Diploma in Psychology (related introductory study)','Diploma in Social Work (related field)'],
+bachelor:['Bachelor of Counselling','Bachelor of Guidance and Counselling','Bachelor of Psychology','Bachelor of Counselling Psychology'],
+master:['Master of Counselling','Master of Guidance and Counselling','Master of Psychology','Master of Clinical Psychology'],
+phd:['PhD in Counselling','PhD in Psychology','PhD in Guidance and Counselling']},
+'Instructional Designer':{
+diploma:['Diploma in Multimedia','Diploma in Educational Technology','Diploma in Digital Media','Diploma in Graphic Design'],
+bachelor:['Bachelor of Educational Technology','Bachelor of Instructional Design','Bachelor of Learning Sciences','Bachelor of Multimedia','Bachelor of Education (Educational Technology)'],
+master:['Master of Instructional Design','Master of Educational Technology','Master of Learning Sciences','Master of Education'],
+phd:['PhD in Educational Technology','PhD in Instructional Design','PhD in Learning Sciences']},
+'Education Officer':{
+diploma:['Diploma in Education Support','Diploma in Public Administration','Diploma in Business Administration'],
+bachelor:['Bachelor of Education','Bachelor of Educational Management','Bachelor of Public Administration','Bachelor of Educational Leadership','Bachelor of Social Science'],
+master:['Master of Educational Management','Master of Education','Master of Public Administration','Master of Educational Leadership'],
+phd:['PhD in Educational Management','PhD in Education Policy','PhD in Public Administration']}
+};
+
+const courseLevels=[
+{key:'diploma',title:'Diploma',duration:'Usually around 2–3 years; check the individual programme.'},
+{key:'bachelor',title:"Bachelor's Degree",duration:'Often around 3–4 years; professional programmes may differ.'},
+{key:'master',title:"Master's Degree",duration:'Duration varies by coursework, research and institution.'},
+{key:'phd',title:'PhD / Doctoral Degree',duration:'Research duration varies by university and study mode.'}
+];
+
+function programmeSearchLink(course){
+return 'https://www.google.com/search?q='+encodeURIComponent('"'+course+'" Malaysia university official programme');
+}
+function renderCourseRecommendations(data){
+const catalog=courseCatalog[selectedCareer];
+if(!catalog){$('courseRecommendations').innerHTML='<p class="rec-note">No course list is available for this career yet.</p>';return;}
+let html=`<p class="rec-note">These study areas are matched to the selected career, <b>${escapeHTML(selectedCareer)}</b>. Exact programme titles and availability vary by institution and should be confirmed directly.</p>`;
+courseLevels.forEach(level=>{
+const courses=catalog[level.key]||[];
+html+=`<h4 class="rec-subheading">${level.title}</h4><p class="rec-note">${level.duration}</p>`;
+if(!courses.length){html+='<p class="rec-note">No suggested course listed for this level.</p>';return;}
+html+=courses.map(course=>`
+<div class="rec-item">
+<strong>${escapeHTML(course)}</strong>
+<p>A field of study related to ${escapeHTML(selectedCareer)}. Exact programme titles and availability vary by institution.</p>
+</div>`).join('');
+});
+html+=`<div class="rec-item"><strong>Important: professional course requirements</strong><p>Some careers require a specific accredited qualification, supervised practice, registration or professional examinations. This is especially important for medicine, nursing, counselling, architecture and engineering. Check the relevant professional body before choosing a programme.</p></div>`;
+$('courseRecommendations').innerHTML=html;
+}
+
+function renderRecommendations(){
+const data=careerData[selectedCareer];if(!data)return;
+renderUniversityRecommendations(data);
+renderCareerRecommendations(data);
+renderCourseRecommendations(data);
+}
+
+function renderPathway(){
+if(!$('careerSelect'))return;
+selectedCareer=$('careerSelect').value;
+if(!careerData[selectedCareer])selectedCareer='Software Developer';
+const data=careerData[selectedCareer];
+$('routeTabs').innerHTML=pathwayOptions.map(r=>`<button class="${selectedRoute===r.id?'active':''}" onclick="selectRoute('${r.id}')">${r.name}</button>`).join('');
+const route=pathwayOptions.find(r=>r.id===selectedRoute)||pathwayOptions[0];selectedRoute=route.id;
+$('pathIntro').innerHTML=`<b>${data.emoji} ${escapeHTML(selectedCareer)}</b><br>${escapeHTML(data.why)}<br><br><b>${escapeHTML(route.title)}</b> — ${escapeHTML(route.description)}`;
+const stages=route.stages.map((s,i)=>{
+let description=s[2];
+if(i===2)description+=` Career-specific direction: ${data.study[1]||data.study[0]}`;
+if(i===3)description+=` Suggested skills: ${data.skills.join(', ')}.`;
+if(i===4)description+=` Career exploration: ${data.study[data.study.length-1]}`;
+return{icon:s[0],title:s[1],description};
+});
+$('pathNodes').innerHTML=stages.map((s,i)=>`
+<div class="timeline-item">
+<div class="timeline-dot"></div>
+<div class="path-node">
+<div class="node-icon">${s.icon}</div>
+<div><h3>${escapeHTML(s.title)}</h3><p>${escapeHTML(s.description)}</p></div>
+<span class="node-badge">${i===0?'START':i===stages.length-1?'DESTINATION':'CHECKPOINT '+i}</span>
+</div>
+</div>`).join('');
+renderRecommendations();
+saveProgress();
+}
+function selectRoute(id){if(!pathwayOptions.some(r=>r.id===id))return;selectedRoute=id;saveProgress();renderPathway();}
+function saveAndGoToPassport(){saveProgress();toast('Pathway saved to your Future Passport!');go('passport');}
+
+function renderPassport(){
+const completed=answers.filter(a=>a!==null).length;
+const hasResults=quizCompleted&&completed===questions.length;
+const top=hasResults?rankedCareers()[0]:null;
+const interest=hasResults?Object.entries(scores).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]):[];
+const skills=top?top.data.skills:['Curiosity','Self-discovery','Exploration'];
+const route=pathwayOptions.find(r=>r.id===selectedRoute);
+$('passportContent').innerHTML=`
+<div class="eyebrow" style="color:#c5b5ff">MYCAREER MAP · EXPLORER PROFILE</div>
+<h2>MY FUTURE PASSPORT ✦</h2>
+<p>A snapshot of your discovery journey. Keep exploring — your interests can grow and change.</p>
+<div class="passport-grid">
+<div class="passport-item"><small>EXPLORER</small><strong>${escapeHTML(playerName)}</strong></div>
+<div class="passport-item"><small>TOP CAREER TO EXPLORE</small><strong>${top?escapeHTML(top.name):'Complete your discovery quiz'}</strong></div>
+<div class="passport-item"><small>INTEREST CLUES</small><div class="chips">${interest.length?interest.map(x=>`<span class="chip">${escapeHTML(x)}</span>`).join(''):'<span class="chip">Not discovered yet</span>'}</div></div>
+<div class="passport-item"><small>SKILLS TO EXPLORE</small><div class="chips">${skills.map(x=>`<span class="chip">${escapeHTML(x)}</span>`).join('')}</div></div>
+<div class="passport-item"><small>SAVED EDUCATION ROUTE</small><strong>${route?escapeHTML(route.name):'Not selected'}</strong></div>
+<div class="passport-item"><small>QUIZ PROGRESS</small><strong>${completed} / ${questions.length} missions completed</strong></div>
+<div class="passport-item"><small>CAREER EXPLORATION</small><strong>${top?'Career matches generated':'Ready to discover'}</strong></div>
+<div class="passport-item"><small>PROFILE STATUS</small><strong>${hasResults?'Discovery completed':'Exploration in progress'}</strong></div>
+</div>
+<p style="font-size:11px">Generated from your MYCAREER MAP prototype activity · This is a self-reflection profile, not a formal career assessment or admission result.</p>`;
+}
+
+function updateExplorerName(){
+const name=prompt('What should we call you?',playerName);
+if(name!==null&&name.trim()){playerName=name.trim().slice(0,35);$('headerName').textContent=playerName.toUpperCase();saveProgress();toast('Explorer name updated!');}
+}
+function resetQuiz(){
+if(!confirm('Are you sure you want to reset your quiz answers?'))return;
+qIndex=0;answers=Array(questions.length).fill(null);scores={};quizCompleted=false;lastMatches=[];
+saveProgress();renderQuestion();renderPathway();toast('Quiz has been reset.');
+}
+function resetProgress(){
+if(!confirm('Reset your saved MYCAREER MAP progress in this browser? This will clear everything.'))return;
+try{localStorage.removeItem(STORAGE_KEY);}catch(error){console.warn(error);}
+qIndex=0;answers=Array(questions.length).fill(null);scores={};
+selectedCareer='Software Developer';selectedRoute='Diploma';playerName='Future Explorer';
+quizCompleted=false;lastMatches=[];
+$('headerName').textContent='FUTURE EXPLORER';$('careerSelect').value=selectedCareer;
+$('askInput').value='';$('aiReply').textContent='';
+renderQuestion();renderPathway();renderPassport();toast('Your local progress has been reset.');go('home');
+}
+
+/* STARTUP */
+loadProgress();
+$('headerName').textContent=playerName.toUpperCase();
+renderWorlds();
+renderQuestion();
+initPathways();
+$('careerSelect').value=selectedCareer;
+renderPathway();
+renderPassport();
+saveProgress();
+</script>
+</body>
+</html>
